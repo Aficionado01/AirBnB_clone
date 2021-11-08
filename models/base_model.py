@@ -12,13 +12,24 @@ class BaseModel:
     created_at: datetime
     updated_at: datetime
 
-    def __init__(self) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """Initializes a new instance of the BaseModel.
+
+        Args:
+            *args (tuple): Ignored.
+            kwargs: A dictionary of attribute keys-value pairs.
         """
-        self.id = str(uuid4())
-        time = datetime.now()
-        self.created_at = time
-        self.updated_at = time
+        if (len(kwargs) > 0):
+            for key, value in kwargs.items():
+                if key is not '__class__':
+                    if key in ('created_at', 'updated_at'):
+                        setattr(self, key, datetime.fromisoformat(value))
+                    else:
+                        setattr(self, key, value)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
     def __str__(self) -> str:
         """Creates a string representation of a BaseModel instance.
