@@ -3,7 +3,7 @@
 + [x] 0\. README, AUTHORS <br/>_**[README.md](README.md)**_ contains a description of the project and the command interpreter (including how to start it, use it and examples). <br/>_**[AUTHORS](AUTHORS)**_ contains a listing of individuals that have contributed content to the repository.
 + [ ] 1\. Be PEP8 compliant! <br/>All the Python files should pass **PEP8** checks and the Bash scripts should pass the **Shellcheck** checks.
 + [ ] 2\. Unittests <br/>_**[tests/](tests/)**_ contains unit tests for all the classes and methods which work in both the interactive and the non-interactive modes.
-+ [ ] 3\. BaseModel <br/>_**[models/base_model.py](models/base_model.py)**_ contains a class `BaseModel` that defines all common attributes/methods for other classes:
++ [x] 3\. BaseModel <br/>_**[models/base_model.py](models/base_model.py)**_ contains a class `BaseModel` that defines all common attributes/methods for other classes:
   + Public instance attribute `id` (str) that is assigned with an `uuid` when an instance is created.
   + Public instance attribute `created_at` (datetime) that is assigned with the current datetime when an instance is created.
   + Public instance attribute `updated_at` (datetime) that is assigned with the current datetime when an instance is created and will be updated every time it is changed.
@@ -34,7 +34,7 @@
     + Imports the `storage` variable from [models/__init__.py](models/__init__.py).
     + Calls the `save(self)` method of the `storage` variable in the method `save(self)` of the `BaseModel` class.
     + In the `__init__(self, *args, **kwargs)` method of the `BaseModel` class, a call to the method `new(self)` is made on the `storage` variable if it’s (the `BaseModel`) a new instance (not from a dictionary representation).
-+ [ ] 6\. Console 0.0.1 <br/>_**[console.py](console.py)**_ contains a program that contains the entry point of the command interpreter:
++ [x] 6\. Console 0.0.1 <br/>_**[console.py](console.py)**_ contains a program that contains the entry point of the command interpreter:
   + The `cmd` module must be used.
   + The class definition must be: `class HBNBCommand(cmd.Cmd):`.
   + The command interpreter should implement:
