@@ -12,14 +12,14 @@
   + Public instance method `to_dict(self)` that updates the public instance attribute `updated_at` with the current datetime.
     + A key `__class__` must be added to this dictionary with the class name of the object.
     + `created_at` and `updated_at` must be converted to string object in ISO format. Format: `%Y-%m-%dT%H:%M:%S.%f` (ex: `2017-06-14T22:31:03.285259`).
-+ [ ] 4\. Create BaseModel from dictionary <br/>_**[models/base_model.py](models/base_model.py)**_ contains the following updates to its `BaseModel` class:
++ [x] 4\. Create BaseModel from dictionary <br/>_**[models/base_model.py](models/base_model.py)**_ contains the following updates to its `BaseModel` class:
   + Contains the constructor `__init__(self, *args, **kwargs)` but `*args` won’t be used.
   + If `kwargs` is not empty:
     + Each key of this dictionary is an attribute name except `__class__`.
     + Each value of this dictionary is the value of this attribute name.
     + **NOTE**: `created_at` and `updated_at` are strings in this dictionary, but the `BaseModel` instance works with a datetime object. Thus these strings have to be converted into datetime objects from the string format `%Y-%m-%dT%H:%M:%S.%f`.
   + Otherwise, `id` and `created_at` are created as they were previously done.
-+ [ ] 5\. Store first object
++ [x] 5\. Store first object
   + _**[models/engine/file_storage.py](models/engine/file_storage.py)**_ contains a class `FileStorage` that serializes instances to a JSON file and deserializes a JSON file to instances:
     + `FileStorage` contains the private class attributes:
       + `__file_path`: a string containing the path to the JSON file.

@@ -3,6 +3,7 @@
 """
 from datetime import datetime
 from uuid import uuid4
+from models import storage
 
 
 class BaseModel:
@@ -21,15 +22,17 @@ class BaseModel:
         """
         if (len(kwargs) > 0):
             for key, value in kwargs.items():
-                if key is not '__class__':
+                if key != '__class__':
                     if key in ('created_at', 'updated_at'):
                         setattr(self, key, datetime.fromisoformat(value))
                     else:
                         setattr(self, key, value)
+            # self.updated_at = datetime.now()
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+            self.updated_at = datetime.now()
+            storage.new(self)
 
     def __str__(self) -> str:
         """Creates a string representation of a BaseModel instance.
@@ -37,12 +40,16 @@ class BaseModel:
         Returns:
             str: A string representation of a BaseModel instance.
         """
-        return '[{s}] ({}) {}'.format(self.__class__, self.id, self.__dict__)
+        res = '[{}] ({}) {}'.format(
+            str(self.__class__.__name__), self.id, self.__dict__
+        )
+        return res
 
     def save(self) -> None:
         """Saves the changes made to this BaseModel instance.
         """
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self) -> dict:
         """Returns a dictionary consisting of this BaseModel instance's
@@ -56,5 +63,5 @@ class BaseModel:
                 res[key] = value.isoformat()
             else:
                 res[key] = value
-        res['__class__'] = str(self.__class__)
+        res['__class__'] = str(self.__class__.__name__)
         return res
