@@ -21,7 +21,7 @@ class ErrorTypes(enum.IntEnum):
 class HBNBCommand(cmd.Cmd):
     """Represents the command interpreter for the AirBnB clone.
     """
-    error_messages: tuple = (
+    error_messages = (
         "** class name missing **",
         "** class doesn't exist **",
         "** instance id missing **",

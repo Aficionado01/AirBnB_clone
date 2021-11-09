@@ -9,8 +9,8 @@ from importlib import import_module
 class FileStorage:
     """Represents the file storage for all data sets.
     """
-    __file_path: str = 'file.json'
-    __objects: dict = {}
+    __file_path = 'file.json'
+    __objects = {}
 
     def __init__(self) -> None:
         self.model_classes = {
