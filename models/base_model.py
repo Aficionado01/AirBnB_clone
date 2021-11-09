@@ -1,18 +1,17 @@
 #!/usr/bin/python3
 """A module containing the base model for all data sets.
 """
+import typing
 from datetime import datetime
 from uuid import uuid4
-from models import storage
+
+if typing.TYPE_CHECKING:
+    from models import storage
 
 
 class BaseModel:
     """Represents the base class for all data sets.
     """
-    id: str
-    created_at: datetime
-    updated_at: datetime
-
     def __init__(self, *args, **kwargs) -> None:
         """Initializes a new instance of the BaseModel.
 

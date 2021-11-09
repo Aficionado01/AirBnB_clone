@@ -5,6 +5,8 @@ import enum
 import cmd
 import re
 from importlib import import_module
+from sys import argv
+from types import FunctionType
 from models import storage
 
 
@@ -22,15 +24,6 @@ class ErrorTypes(enum.IntEnum):
 class HBNBCommand(cmd.Cmd):
     """Represents the command interpreter for the AirBnB clone.
     """
-    model_classes = {
-        'BaseModel': import_module('models.base_model').BaseModel,
-        'User': import_module('models.user').User,
-        'State': import_module('models.state').State,
-        'City': import_module('models.city').City,
-        'Amenity': import_module('models.user').Amenity,
-        'Place': import_module('models.place').Place,
-        'Review': import_module('models.review').Review,
-    }
     error_messages: tuple = (
         "** class name missing **",
         "** class doesn't exist **",
@@ -67,6 +60,52 @@ class HBNBCommand(cmd.Cmd):
                     args_list.append(match.strip())
         return args_list
 
+    def precmd(self, line: str) -> str:
+        """Runs some actions before a line of command is executed.
+
+        Args:
+            line (str): The line of command to be executed.
+        Returns:
+            str: The next line of command to execute.
+        """
+        errors = HBNBCommand.error_messages
+        patterns = (
+            r'(?P<class>[a-zA-Z]+)',
+            r'(?P<action>[a-zA-Z]+)',
+            r'(?P<args_txt>.*)',
+            # r'(?P<int_t>[-+]?\d+)',
+            # r'(?P<float_t>[-+]?\d+\.\d+)',
+            # r'(?P<string_t>"(?:[^"]|\\")*")',
+            # r'(?P<dict_t>\{.*\})',
+        )
+        cls_fxn_fmt = r'{}\s*\.\s*{}\s*\({}\)'.format(
+            patterns[0], patterns[1], patterns[2]
+        )
+        cls_fxn_match = re.fullmatch(cls_fxn_fmt, line)
+        if cls_fxn_match is not None:
+            class_name = cls_fxn_match.group('class')
+            action_name = cls_fxn_match.group('action')
+            fxn_name = 'cls_{}'.format(action_name)
+            fxn = getattr(self, fxn_name, None)
+            args_txt = cls_fxn_match.group('args_txt').strip()
+            args = None
+            if class_name not in storage.model_classes.keys():
+                print(errors[ErrorTypes.Class_Missing])
+                return ''
+            if fxn_name not in dir(self):
+                return super().precmd(line)
+            if type(fxn) is not type(self.precmd):
+                return super().precmd(line)
+            try:
+                end_c = '' if args_txt.endswith(',') else ','
+                args = eval('({}{})'.format(args_txt, end_c))
+            except Exception:
+                return super().precmd(line)
+            fxn(class_name, *args)
+            return ''
+        else:
+            return super().precmd(line)
+
     def do_EOF(self, line: str) -> None:
         """Exits this application.
         Usage: EOF
@@ -79,6 +118,14 @@ class HBNBCommand(cmd.Cmd):
         """
         exit(0)
 
+    def emptyline(self) -> bool:
+        """Executes some actions when the command line is empty.
+
+        Returns:
+            bool: Always False.
+        """
+        return False
+
     def do_create(self, line: str) -> None:
         """Creates a new instance of BaseModel, commits the changes,
         and prints the id.
@@ -90,10 +137,10 @@ class HBNBCommand(cmd.Cmd):
         if class_name is None:
             print(errors[ErrorTypes.Class_Name_Missing])
             return
-        if class_name not in HBNBCommand.model_classes.keys():
+        if class_name not in storage.model_classes.keys():
             print(errors[ErrorTypes.Class_Missing])
             return
-        new_obj = HBNBCommand.model_classes[class_name]()
+        new_obj = storage.model_classes[class_name]()
         new_obj.save()
         print(new_obj.id)
 
@@ -109,14 +156,14 @@ class HBNBCommand(cmd.Cmd):
         if class_name is None:
             print(errors[ErrorTypes.Class_Name_Missing])
             return
-        if class_name not in HBNBCommand.model_classes.keys():
+        if class_name not in storage.model_classes.keys():
             print(errors[ErrorTypes.Class_Missing])
             return
         if obj_id is None:
             print(errors[ErrorTypes.Instance_Id_Missing])
             return
         for obj in storage.all().values():
-            if isinstance(obj, HBNBCommand.model_classes[class_name]):
+            if isinstance(obj, storage.model_classes[class_name]):
                 if obj.id == obj_id:
                     print(obj)
                     return
@@ -135,14 +182,14 @@ class HBNBCommand(cmd.Cmd):
         if class_name is None:
             print(errors[ErrorTypes.Class_Name_Missing])
             return
-        if class_name not in HBNBCommand.model_classes.keys():
+        if class_name not in storage.model_classes.keys():
             print(errors[ErrorTypes.Class_Missing])
             return
         if obj_id is None:
             print(errors[ErrorTypes.Instance_Id_Missing])
             return
         for id, obj in storage.all().items():
-            if isinstance(obj, HBNBCommand.model_classes[class_name]):
+            if isinstance(obj, storage.model_classes[class_name]):
                 if obj.id == obj_id:
                     obj_store_id = id
                     break
@@ -160,10 +207,10 @@ class HBNBCommand(cmd.Cmd):
         """
         args = HBNBCommand.split_args(line)
         class_name = args[0] if len(args) >= 1 else 'BaseModel'
-        if class_name in HBNBCommand.model_classes.keys():
+        if class_name in storage.model_classes.keys():
             all_class_objs = []
             for obj in storage.all().values():
-                if isinstance(obj, HBNBCommand.model_classes[class_name]):
+                if isinstance(obj, storage.model_classes[class_name]):
                     all_class_objs.append(str(obj))
             print(all_class_objs)
         else:
@@ -185,14 +232,14 @@ class HBNBCommand(cmd.Cmd):
         if class_name is None:
             print(errors[ErrorTypes.Class_Name_Missing])
             return
-        if class_name not in HBNBCommand.model_classes.keys():
+        if class_name not in storage.model_classes.keys():
             print(errors[ErrorTypes.Class_Missing])
             return
         if obj_id is None:
             print(errors[ErrorTypes.Instance_Id_Missing])
             return
         for store_obj in storage.all().values():
-            if isinstance(store_obj, HBNBCommand.model_classes[class_name]):
+            if isinstance(store_obj, storage.model_classes[class_name]):
                 if store_obj.id == obj_id:
                     obj = store_obj
                     break
@@ -208,7 +255,6 @@ class HBNBCommand(cmd.Cmd):
         if attr_name not in ignored_attrs:
             val = type(getattr(obj, attr_name, ''))(attr_value)
             setattr(obj, attr_name, val)
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
