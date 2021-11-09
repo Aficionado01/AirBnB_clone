@@ -1,0 +1,13 @@
+name: CodeTests
+on: [push]
+jobs:
+  Python-Code-Testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Run the tests in an interactive mode
+        run: python3 -m unittest discover tests
+      - name: Run the tests in a non-interactive mode
+        run: echo "python3 -m unittest discover tests" | bash
+      - run: echo "🍏 This job's status is ${{ job.status }}."
