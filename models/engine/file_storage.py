@@ -9,12 +9,19 @@ from importlib import import_module
 class FileStorage:
     """Represents the file storage for all data sets.
     """
-    __file_path: str = 'file.json'
-    __objects: dict = {}
-    __model_classes = {
-        'BaseModel': import_module('models.base_model').BaseModel,
-        'User': import_module('models.user').User,
-    }
+    __file_path = 'file.json'
+    __objects = {}
+
+    def __init__(self) -> None:
+        self.model_classes = {
+            'BaseModel': import_module('models.base_model').BaseModel,
+            'User': import_module('models.user').User,
+            'State': import_module('models.state').State,
+            'City': import_module('models.city').City,
+            'Amenity': import_module('models.amenity').Amenity,
+            'Place': import_module('models.place').Place,
+            'Review': import_module('models.review').Review,
+        }
 
     def all(self) -> dict:
         """Returns all the stored objects.
@@ -51,7 +58,7 @@ class FileStorage:
                 file_lines = file.readlines()
             json_objs = JSONDecoder().decode(''.join(file_lines))
             base_model_objs = {}
-            classes = FileStorage.__model_classes
+            classes = self.model_classes
             for key, value in json_objs.items():
                 cls_name = value['__class__']
                 if cls_name in classes.keys():
