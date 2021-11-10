@@ -6,8 +6,9 @@ from datetime import datetime
 import re
 import os
 import time
-from models.base_model import BaseModel
 
+from models.base_model import BaseModel
+from tests import remove_files
 
 class TestBaseModel(unittest.TestCase):
     """Represents the test class for the BaseModel class.
@@ -16,12 +17,106 @@ class TestBaseModel(unittest.TestCase):
     def test_init(self):
         """Tests the initialization of the Base class.
         """
+        self.assertTrue(hasattr(BaseModel(), 'id'))
+        self.assertTrue(hasattr(BaseModel(), 'created_at'))
+        self.assertTrue(hasattr(BaseModel(), 'updated_at'))
+        self.assertTrue(hasattr(BaseModel(), 'updated_at'))
         self.assertIsInstance(BaseModel().id, str)
         self.assertIsInstance(BaseModel().created_at, datetime)
         self.assertIsInstance(BaseModel().updated_at, datetime)
+        self.assertIsInstance(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'BaseModel'
+        }).created_at, datetime)
+        self.assertIsInstance(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'BaseModel'
+        }).updated_at, datetime)
+        self.assertEqual(BaseModel(**{
+            'id': None,
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'BaseModel'
+        }).id, None)
+        remove_files()
+        self.assertEqual(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'BaseModel'
+        }).id, 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4')
+        self.assertEqual(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'BaseModel'
+        }).name, 'My_First_Model')
+        self.assertEqual(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'BaseModel'
+        }).my_number, 89)
+        self.assertNotEqual(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': '777888'
+        }).__class__, '777888')
+        self.assertEqual(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': None
+        }).__class__.__name__, 'BaseModel')
+        self.assertEqual(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'User'
+        }).__class__.__name__, 'BaseModel')
+        self.assertEqual(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'BaseModel'
+        }).created_at, datetime(2021, 11, 10, 12, 50, 6, 589225))
+        self.assertEqual(BaseModel(**{
+            'id': 'd211f6a0-c3aa-4261-8fa1-5be1873f2aa4',
+            'created_at': '2021-11-10T12:50:06.589225',
+            'updated_at': '2021-11-10T12:50:06.589242',
+            'name': 'My_First_Model',
+            'my_number': 89,
+            '__class__': 'BaseModel'
+        }).updated_at, datetime(2021, 11, 10, 12, 50, 6, 589242))
+        self.assertNotEqual(BaseModel().id, BaseModel().id)
 
     def test_save(self):
-        """test updation time after updating
+        """Tests the save function of the BaseModel class.
         """
         pass
         # dummy = self.dummy
@@ -29,39 +124,7 @@ class TestBaseModel(unittest.TestCase):
         # dummy.save()
         # self.assertGreater(dummy.updated_at, dummy.created_at)
 
-    def test_dict(self):
-        """test dictionary representation of a model
+    def test_to_dict(self):
+        """Tests the to_dict function of the BaseModel class.
         """
         pass
-        # dummy = self.dummy
-        # test_dict = dummy.to_dict()
-        # self.assertTrue('__class__' in test_dict)
-        # self.assertIsInstance(test_dict['__class__'], str)
-        # self.assertTrue('id' in test_dict)
-        # self.assertIsInstance(test_dict["id"], str)
-        # self.assertTrue('created_at' in test_dict)
-        # self.assertIsInstance(test_dict['created_at'], str)
-        # self.assertTrue('updated_at' in test_dict)
-        # self.assertIsInstance(test_dict['updated_at'], str)
-        # dummy.test = 10
-        # test_dict = dummy.to_dict()
-        # self.assertTrue('test' in test_dict)
-        # dummy.save()
-
-    def test_from_dict(self):
-        """test instance retrival from a dictionary
-        """
-        pass
-        # dummy = self.dummy
-        # dummy.test = 10
-        # test_instance = BaseModel(**dummy.to_dict())
-        # self.assertTrue('__class__' not in test_instance.__dict__)
-        # self.assertTrue(hasattr(test_instance, 'id'))
-        # self.assertTrue(hasattr(test_instance, 'created_at'))
-        # self.assertTrue(hasattr(test_instance, 'updated_at'))
-        # self.assertTrue(hasattr(test_instance, 'test'))
-        # self.assertEqual(test_instance.id, dummy.id)
-        # self.assertIsInstance(test_instance.created_at, datetime)
-        # self.assertIsInstance(test_instance.updated_at, datetime)
-        # self.assertEqual(test_instance.created_at, dummy.created_at)
-        # self.assertEqual(test_instance.updated_at, dummy.updated_at)
