@@ -6,12 +6,19 @@ from datetime import datetime
 import re
 import os
 import time
-import models
+from models.base_model import BaseModel
 
 
 class TestBaseModel(unittest.TestCase):
     """Represents the test class for the BaseModel class.
     """
+
+    def test_init(self):
+        """Tests the initialization of the Base class.
+        """
+        self.assertIsInstance(BaseModel().id, str)
+        self.assertIsInstance(BaseModel().created_at, datetime)
+        self.assertIsInstance(BaseModel().updated_at, datetime)
 
     def test_save(self):
         """test updation time after updating
