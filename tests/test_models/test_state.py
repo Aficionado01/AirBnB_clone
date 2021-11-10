@@ -6,6 +6,6 @@ import models
 
 
 class TestState(unittest.TestCase):
-    """state class test
+    """Represents the test class for the State class.
     """
     pass

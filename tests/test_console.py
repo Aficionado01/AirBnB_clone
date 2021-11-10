@@ -5,6 +5,7 @@ from io import StringIO
 import unittest
 from unittest.mock import patch
 
+
 class TestHBNBCommand(unittest.TestCase):
     """Represents the test class for the HBNBCommand class.
     """
