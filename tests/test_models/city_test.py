@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""
-    city testcase
+"""city testcase
 """
 
 from models.city import City
@@ -9,14 +8,12 @@ from models.base_model import BaseModel
 import unittest
 
 
-class test_City(unittest.TestCase):
-    """
-        test for city class
+class CityTest(unittest.TestCase):
+    """test for city class
     """
     @classmethod
     def setUpClass(cls):
-        """
-            setup
+        """setup
         """
         cls.dummy_city = City()
         cls.dummy_city.name = "test"
@@ -24,14 +21,12 @@ class test_City(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """
-            tear down
+        """tear down
         """
         del cls.dummy_city
 
     def test_inheritance(self):
-        """
-            test inheritance
+        """test inheritance
         """
         self.assertIsInstance(self.dummy_city, BaseModel)
         self.assertTrue(hasattr(self.dummy_city, "id"))
@@ -39,8 +34,7 @@ class test_City(unittest.TestCase):
         self.assertTrue(hasattr(self.dummy_city, "updated_at"))
 
     def test_attributes(self):
-        """
-            test attributes
+        """test attributes
         """
         self.assertTrue(hasattr(self.dummy_city, "name"))
         self.assertTrue(hasattr(self.dummy_city, "state_id"))
