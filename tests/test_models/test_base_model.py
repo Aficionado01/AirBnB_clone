@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""BaseModel testcase
+"""A unit test module for the base model of all models.
 """
 import unittest
 from datetime import datetime
