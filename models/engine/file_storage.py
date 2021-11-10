@@ -4,15 +4,24 @@
 import os
 from json import JSONDecoder, JSONEncoder
 from importlib import import_module
-# from .. import base_model
-# from models.base_model import BaseModel
 
 
 class FileStorage:
     """Represents the file storage for all data sets.
     """
-    __file_path: str = 'file.json'
-    __objects: dict = {}
+    __file_path = 'file.json'
+    __objects = {}
+
+    def __init__(self) -> None:
+        self.model_classes = {
+            'BaseModel': import_module('models.base_model').BaseModel,
+            'User': import_module('models.user').User,
+            'State': import_module('models.state').State,
+            'City': import_module('models.city').City,
+            'Amenity': import_module('models.amenity').Amenity,
+            'Place': import_module('models.place').Place,
+            'Review': import_module('models.review').Review,
+        }
 
     def all(self) -> dict:
         """Returns all the stored objects.
@@ -49,11 +58,9 @@ class FileStorage:
                 file_lines = file.readlines()
             json_objs = JSONDecoder().decode(''.join(file_lines))
             base_model_objs = {}
-            model_creators = {
-                'BaseModel': import_module('models.base_model').BaseModel,
-            }
+            classes = self.model_classes
             for key, value in json_objs.items():
                 cls_name = value['__class__']
-                if cls_name in model_creators.keys():
-                    base_model_objs[key] = model_creators[cls_name](**value)
+                if cls_name in classes.keys():
+                    base_model_objs[key] = classes[cls_name](**value)
             FileStorage.__objects = base_model_objs
