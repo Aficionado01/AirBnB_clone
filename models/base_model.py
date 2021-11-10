@@ -19,6 +19,8 @@ class BaseModel:
             *args (tuple): Ignored.
             kwargs: A dictionary of attribute keys-value pairs.
         """
+        if 'storage' not in dir():
+            from models import storage
         if (len(kwargs) > 0):
             for key, value in kwargs.items():
                 if key != '__class__':
