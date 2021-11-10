@@ -53,8 +53,31 @@ These are actions that are performed based on a given class. They have the forma
 | User | Represents a user account for this project. |
 | State | Represents the geographical state in which a _User_ lives. |
 | City | Represents an urban area in a _State_. |
-| Amenity | Represents the geographical state in which a _User_ lives. |
+| Amenity | Represents a useful feature of a _Place__. |
 | Place | Represents a building that a _User_ can rent. |
 | Review | Represents a review of a _Place_. |
 
 ### Examples
+
+```powershell
+b3zaleel@BOCI-HPPavilionGL15 ~/AirBnB_clone (main)> ./console.py
+(hbnb) help
+
+Documented commands (type help <topic>):
+========================================
+EOF  all  create  destroy  help  quit  show  update
+
+(hbnb) all Base
+** class doesn't exist **
+(hbnb) all User
+[]
+(hbnb) all BaseModel
+["[BaseModel] (65b8d056-cf49-4c88-a260-5ac03b6a569a) {'id': '65b8d056-cf49-4c88-a260-5ac03b6a569a', 'created_at': datetime.datetime(2021, 11, 8, 22, 21, 16, 59389), 'updated_at': datetime.datetime(2021, 11, 8, 22, 21, 16, 59450), 'name': 'My_First_Model', 'my_number': 89}", "[BaseModel] (c2a59481-316b-4775-a176-13f6009e88a5) {'id': 'c2a59481-316b-4775-a176-13f6009e88a5', 'created_at': datetime.datetime(2021, 11, 8, 22, 21, 19, 150040), 'updated_at': datetime.datetime(2021, 11, 8, 22, 21, 19, 150088), 'name': 'My_First_Model', 'my_number': 89}", "[BaseModel] (761301fc-773f-4d26-adf9-78731f841d71) {'id': '761301fc-773f-4d26-adf9-78731f841d71', 'created_at': datetime.datetime(2021, 11, 9, 7, 6, 38, 601068), 'updated_at': datetime.datetime(2021, 11, 9, 7, 6, 38, 601088)}"]
+(hbnb) show BaseModel "65b8d056-cf49-4c88-a260-5ac03b6a569a"
+[BaseModel] (65b8d056-cf49-4c88-a260-5ac03b6a569a) {'id': '65b8d056-cf49-4c88-a260-5ac03b6a569a', 'created_at': datetime.datetime(2021, 11, 8, 22, 21, 16, 59389), 'updated_at': datetime.datetime(2021, 11, 8, 22, 21, 16, 59450), 'name': 'My_First_Model', 'my_number': 89}
+(hbnb) BaseModel.count()
+3
+(hbnb)
+(hbnb) quit
+b3zaleel@BOCI-HPPavilionGL15 ~/AirBnB_clone (main)>
+```
