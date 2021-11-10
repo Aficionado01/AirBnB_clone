@@ -1,7 +1,7 @@
 ## Tasks To Complete
 
 + [x] 0\. README, AUTHORS <br/>_**[README.md](README.md)**_ contains a description of the project and the command interpreter (including how to start it, use it and examples). <br/>_**[AUTHORS](AUTHORS)**_ contains a listing of individuals that have contributed content to the repository.
-+ [ ] 1\. Be PEP8 compliant! <br/>All the Python files should pass **PEP8** checks and the Bash scripts should pass the **Shellcheck** checks.
++ [x] 1\. Be PEP8 compliant! <br/>All the Python files should pass **PEP8** checks and the Bash scripts should pass the **Shellcheck** checks.
 + [ ] 2\. Unittests <br/>_**[tests/](tests/)**_ contains unit tests for all the classes and methods which work in both the interactive and the non-interactive modes.
 + [x] 3\. BaseModel <br/>_**[models/base_model.py](models/base_model.py)**_ contains a class `BaseModel` that defines all common attributes/methods for other classes:
   + Public instance attribute `id` (str) that is assigned with an `uuid` when an instance is created.
