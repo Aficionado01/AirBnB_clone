@@ -9,6 +9,7 @@ import time
 
 from models.base_model import BaseModel
 
+
 class BaseModel_test(unittest.TestCase):
     """BaseModel Test Class
     """
@@ -25,7 +26,7 @@ class BaseModel_test(unittest.TestCase):
         del cls.dummy
         try:
             os.remove('file.json')
-        except:
+        except OSError:
             pass
 
     def test_id(self):
@@ -106,4 +107,4 @@ class BaseModel_test(unittest.TestCase):
 
 
 if __name__ == '__main__':
-        unittest.main()
+    unittest.main()
