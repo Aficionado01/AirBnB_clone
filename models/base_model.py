@@ -42,13 +42,17 @@ class BaseModel:
             str: A string representation of a BaseModel instance.
         """
         res = '[{}] ({}) {}'.format(
-            str(self.__class__.__name__), self.id, self.__dict__
+            self.__class__.__name__,
+            self.id,
+            self.__dict__
         )
         return res
 
     def save(self) -> None:
         """Saves the changes made to this BaseModel instance.
         """
+        if 'storage' not in dir():
+            from models import storage
         self.updated_at = datetime.now()
         storage.save()
 
@@ -64,5 +68,5 @@ class BaseModel:
                 res[key] = value.isoformat()
             else:
                 res[key] = value
-        res['__class__'] = str(self.__class__.__name__)
+        res['__class__'] = self.__class__.__name__
         return res
