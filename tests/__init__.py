@@ -1,3 +1,29 @@
 #!/usr/bin/python3
 """Tests for the AirBnb clone modules.
 """
+import os
+
+
+def remove_files():
+    """Removes the serialized object files from the
+    current working directory.
+    """
+    if os.path.isfile('file.json'):
+        os.unlink('file.json')
+
+
+def read_text_file(file_name):
+    """Reads the contents of a given file.
+
+    Args:
+        file_name (str): The name of the file to read.
+
+    Returns:
+        str: The contents of the file if it exists.
+    """
+    lines = []
+    if os.path.isfile(file_name):
+        with open(file_name, mode='r') as file:
+            for line in file.readlines():
+                lines.append(line)
+    return ''.join(lines)

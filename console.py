@@ -91,7 +91,7 @@ class HBNBCommand(cmd.Cmd):
                 return ''
             if fxn_name not in dir(self):
                 return super().precmd(line)
-            if isinstance(fxn, type(self.precmd)):
+            if not isinstance(fxn, type(self.precmd)):
                 return super().precmd(line)
             try:
                 if len(args_txt) == 0:
