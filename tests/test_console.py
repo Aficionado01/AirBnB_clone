@@ -8,24 +8,37 @@ from io import StringIO
 from unittest.mock import patch
 
 from console import HBNBCommand
+from tests import remove_files
 
 
 class TestHBNBCommand(unittest.TestCase):
     """Represents the test class for the HBNBCommand class.
     """
 
-    def test_do_all(self):
-        """Tests the do_all function of the HBNBCommand class.
+    def test_prompt(self):
+        """Tests the prompt attribute of the HBNBCommand class.
+        """
+        self.assertEqual(HBNBCommand().prompt.strip(), '(hbnb)')
+
+    def test_emptyline(self):
+        """Tests the emptyline function of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().onecmd('all 78')
-            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+            HBNBCommand().onecmd('')
+            HBNBCommand().onecmd('    ')
+            HBNBCommand().onecmd('    \t\t')
+            HBNBCommand().onecmd('    \t  \t')
+            HBNBCommand().onecmd('\t   ')
+            HBNBCommand().onecmd('\n   ')
+            HBNBCommand().onecmd('   \n')
+            HBNBCommand().onecmd('\n   \n')
+            self.assertEqual(istdout.getvalue(), '')
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().onecmd('all 78 User')
-            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
-        with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().onecmd('all Place')
-            self.assertEqual(istdout.getvalue(), "[]\n")
+            cons = HBNBCommand()
+            cons.onecmd('ls')
+            cons.onecmd('')
+            cons.onecmd('')
+            self.assertEqual(istdout.getvalue(), '*** Unknown syntax: ls\n')
 
     def test_do_EOF(self):
         """Tests the do_EOF function of the HBNBCommand class.
@@ -88,22 +101,29 @@ class TestHBNBCommand(unittest.TestCase):
                 HBNBCommand().onecmd('quit')
         self.assertEqual(ex.exception.code, 0)
 
-    def test_emptyline(self):
-        """Tests the emptyline function of the HBNBCommand class.
+    def test_do_create(self):
+        """Tests the do_create function of the HBNBCommand class.
+        """
+        remove_files()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create 78')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create 78 User')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create Place')
+            self.assertRegex(istdout.getvalue(), r'[-]-\n')
+
+    def test_do_all(self):
+        """Tests the do_all function of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().onecmd('')
-            HBNBCommand().onecmd('    ')
-            HBNBCommand().onecmd('    \t\t')
-            HBNBCommand().onecmd('    \t  \t')
-            HBNBCommand().onecmd('\t   ')
-            HBNBCommand().onecmd('\n   ')
-            HBNBCommand().onecmd('   \n')
-            HBNBCommand().onecmd('\n   \n')
-            self.assertEqual(istdout.getvalue(), '')
+            HBNBCommand().onecmd('all 78')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
-            cons = HBNBCommand()
-            cons.onecmd('ls')
-            cons.onecmd('')
-            cons.onecmd('')
-            self.assertEqual(istdout.getvalue(), '*** Unknown syntax: ls\n')
+            HBNBCommand().onecmd('all 78 User')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('all Place')
+            self.assertEqual(istdout.getvalue(), "[]\n")
