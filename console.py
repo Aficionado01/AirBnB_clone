@@ -70,10 +70,6 @@ class HBNBCommand(cmd.Cmd):
             r'(?P<class>[a-zA-Z]+)',
             r'(?P<action>[a-zA-Z]+)',
             r'(?P<args_txt>.*)',
-            # r'(?P<int_t>[-+]?\d+)',
-            # r'(?P<float_t>[-+]?\d+\.\d+)',
-            # r'(?P<string_t>"(?:[^"]|\\")*")',
-            # r'(?P<dict_t>\{.*\})',
         )
         cls_fxn_fmt = r'{}\s*\.\s*{}\s*\({}\)'.format(
             patterns[0], patterns[1], patterns[2]
@@ -90,9 +86,9 @@ class HBNBCommand(cmd.Cmd):
                 print(errors[ErrorTypes.Class_Not_Existing])
                 return ''
             if fxn_name not in dir(self):
-                return super().precmd(line)
+                return super().onecmd(line)
             if not isinstance(fxn, type(self.precmd)):
-                return super().precmd(line)
+                return super().onecmd(line)
             try:
                 if len(args_txt) == 0:
                     args = tuple()
@@ -101,10 +97,10 @@ class HBNBCommand(cmd.Cmd):
                     args = eval('({}{})'.format(args_txt, end_c))
                 fxn(class_name, *args)
             except Exception:
-                return super().precmd(line)
+                return super().onecmd(line)
             return ''
         else:
-            return super().precmd(line)
+            return super().onecmd(line)
 
     def do_EOF(self, line: str) -> None:
         """Exits this application.
