@@ -257,6 +257,7 @@ class HBNBCommand(cmd.Cmd):
         if attr_name not in ignored_attrs:
             val = type(getattr(obj, attr_name, ''))(attr_value)
             setattr(obj, attr_name, val)
+            obj.save()
 
     def cls_all(self, class_name: str, *args: tuple):
         """Retrieves all instances of a class.
@@ -387,6 +388,7 @@ class HBNBCommand(cmd.Cmd):
             for key, value in dict_src.items():
                 if key not in ignored_attrs:
                     setattr(obj, key, value)
+            obj.save()
             return
         attr_name = args[1] if len(args) >= 2 else None
         attr_value = args[2] if len(args) >= 3 else None
@@ -398,6 +400,7 @@ class HBNBCommand(cmd.Cmd):
             return
         if attr_name not in ignored_attrs:
             setattr(obj, attr_name, attr_value)
+            obj.save()
 
 
 if __name__ == '__main__':
