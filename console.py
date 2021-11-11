@@ -86,9 +86,11 @@ class HBNBCommand(cmd.Cmd):
                 print(errors[ErrorTypes.Class_Not_Existing])
                 return ''
             if fxn_name not in dir(self):
-                return super().onecmd(line)
+                super().onecmd(line)
+                return ''
             if not isinstance(fxn, type(self.precmd)):
-                return super().onecmd(line)
+                super().onecmd(line)
+                return ''
             try:
                 if len(args_txt) == 0:
                     args = tuple()
@@ -97,10 +99,11 @@ class HBNBCommand(cmd.Cmd):
                     args = eval('({}{})'.format(args_txt, end_c))
                 fxn(class_name, *args)
             except Exception:
-                return super().onecmd(line)
+                super().onecmd(line)
             return ''
         else:
-            return super().onecmd(line)
+            super().onecmd(line)
+            return ''
 
     def do_EOF(self, line: str) -> None:
         """Exits this application.
