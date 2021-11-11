@@ -50,11 +50,11 @@ class HBNBCommand(cmd.Cmd):
         txt = line.strip()
         args_match = re.findall(r'(?:"[^"]*"|\S+)\s*', txt)
         if args_match is not None:
-            for match in args_match:
+            for match in map(lambda x: x.strip(), args_match):
                 if match.startswith('"') and match.endswith('"'):
                     args_list.append(match.strip('"'))
                 else:
-                    args_list.append(match.strip())
+                    args_list.append(match)
         return args_list
 
     def precmd(self, line: str) -> str:
@@ -275,7 +275,7 @@ class HBNBCommand(cmd.Cmd):
             for obj in storage.all().values():
                 if isinstance(obj, storage.model_classes[class_name]):
                     all_class_objs.append(str(obj))
-            print(all_class_objs)
+            print('[{}]'.format(', '.join(all_class_objs)))
         else:
             print(errors[ErrorTypes.Class_Not_Existing])
 
