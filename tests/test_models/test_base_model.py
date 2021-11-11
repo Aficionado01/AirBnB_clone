@@ -10,6 +10,7 @@ import time
 from models.base_model import BaseModel
 from tests import remove_files
 
+
 class TestBaseModel(unittest.TestCase):
     """Represents the test class for the BaseModel class.
     """
