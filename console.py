@@ -50,11 +50,11 @@ class HBNBCommand(cmd.Cmd):
         txt = line.strip()
         args_match = re.findall(r'(?:"[^"]*"|\S+)\s*', txt)
         if args_match is not None:
-            for match in args_match:
+            for match in map(lambda x: x.strip(), args_match):
                 if match.startswith('"') and match.endswith('"'):
                     args_list.append(match.strip('"'))
                 else:
-                    args_list.append(match.strip())
+                    args_list.append(match)
         return args_list
 
     def precmd(self, line: str) -> str:
@@ -257,6 +257,7 @@ class HBNBCommand(cmd.Cmd):
         if attr_name not in ignored_attrs:
             val = type(getattr(obj, attr_name, ''))(attr_value)
             setattr(obj, attr_name, val)
+            obj.save()
 
     def cls_all(self, class_name: str, *args: tuple):
         """Retrieves all instances of a class.
@@ -274,7 +275,7 @@ class HBNBCommand(cmd.Cmd):
             for obj in storage.all().values():
                 if isinstance(obj, storage.model_classes[class_name]):
                     all_class_objs.append(str(obj))
-            print(all_class_objs)
+            print('[{}]'.format(', '.join(all_class_objs)))
         else:
             print(errors[ErrorTypes.Class_Not_Existing])
 
@@ -387,6 +388,7 @@ class HBNBCommand(cmd.Cmd):
             for key, value in dict_src.items():
                 if key not in ignored_attrs:
                     setattr(obj, key, value)
+            obj.save()
             return
         attr_name = args[1] if len(args) >= 2 else None
         attr_value = args[2] if len(args) >= 3 else None
@@ -398,6 +400,7 @@ class HBNBCommand(cmd.Cmd):
             return
         if attr_name not in ignored_attrs:
             setattr(obj, attr_name, attr_value)
+            obj.save()
 
 
 if __name__ == '__main__':
