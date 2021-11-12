@@ -1,13 +1,19 @@
 #!/usr/bin/python3
 """A unit test module for the console (command interpreter).
 """
-import json
 import os
 import unittest
 from io import StringIO
 from unittest.mock import patch
 
 from console import HBNBCommand, storage
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 from tests import remove_files, write_text_file
 
 
@@ -233,42 +239,71 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(istdout.getvalue(), "*** Unknown syntax: foo.a\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.a')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.a\n")
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User.a\n"
+            )
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.all')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.all\n")
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User.all\n"
+            )
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.all(')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.all(\n")
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User.all(\n"
+            )
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.all)')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.all)\n")
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User.all)\n"
+            )
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.all(")')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.all(\")\n")
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User.all(\")\n"
+            )
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.all(1 23)')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.all(1 23)\n")
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User.all(1 23)\n"
+            )
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.foo()')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.foo()\n")
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User.foo()\n"
+            )
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('ghy.foo()')
             self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('.all()')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: .all()\n")
-        with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('User.()')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.()\n")
-        with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('User()')
-            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User()\n")
-        with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('User.show "49faff9a-6318-451f-87b6-910505c55907"')
             self.assertEqual(
                 istdout.getvalue(),
-                '*** Unknown syntax: User.show "49faff9a-6318-451f-87b6-910505c55907"\n'
+                "*** Unknown syntax: .all()\n"
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.()')
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User.()\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User()')
+            self.assertEqual(
+                istdout.getvalue(),
+                "*** Unknown syntax: User()\n"
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.show "49faff9a-6318-451f-87b6"')
+            self.assertEqual(
+                istdout.getvalue(),
+                '*** Unknown syntax: User.show "49faff9a-6318-451f-87b6"\n'
             )
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('foo.all()')
@@ -281,9 +316,6 @@ class TestHBNBCommand(unittest.TestCase):
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.count("49faff9a-6318-451f-87b6")')
-            self.assertEqual(istdout.getvalue(), "0\n")
-        with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('User.count(None)')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.count(None)')
@@ -379,6 +411,105 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertRegex(
                 istdout.getvalue(),
                 r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){3}3\n'
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+
+    def test_cls_show(self):
+        """Tests the show class action of the HBNBCommand class.
+        """
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.show()')
+            self.assertEqual(istdout.getvalue(), "** instance id missing **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.show("49faff9a-6318-451f-87b6")')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.show(2)')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        # creating objects and showing them
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = BaseModel()
+            mdl.save()
+            HBNBCommand().precmd('BaseModel.show("{}")'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[BaseModel\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = User()
+            mdl.save()
+            HBNBCommand().precmd('User.show("{}")'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[User\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = State()
+            mdl.save()
+            HBNBCommand().precmd('State.show("{}")'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[State\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = City()
+            mdl.save()
+            HBNBCommand().precmd('City.show("{}")'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[City\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = Amenity()
+            mdl.save()
+            HBNBCommand().precmd('Amenity.show("{}")'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[Amenity\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = Place()
+            mdl.save()
+            HBNBCommand().precmd('Place.show("{}")'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[Place\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = Review()
+            mdl.save()
+            HBNBCommand().precmd('Review.show("{}")'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[Review\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
+            )
+        # creating objects and showing them (with multiple arguments)
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = BaseModel()
+            mdl.save()
+            HBNBCommand().precmd('BaseModel.show("{}", 34)'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[BaseModel\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
             )
         write_text_file('file.json', '{}')
         storage.reload()

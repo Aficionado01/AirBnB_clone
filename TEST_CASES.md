@@ -23,12 +23,12 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 ### FileStorage
 
-+ [ ] `FileStorage` contains the private class attributes: `__file_path` (str) and `__objects` (dict).
-+ [ ] `FileStorage().all()` works correctly.
-+ [ ] `FileStorage().new(obj)` works correctly.
-+ [ ] `FileStorage().save()` works correctly.
-+ [ ] `FileStorage().reload()` works correctly.
-+ [ ] All the tests above should be working for all models, which include `BaseModel`, `User`, `State`, `City`, `Amenity`, `Place`, and `Review`.
++ [x] `FileStorage` contains the private class attributes: `__file_path` (str) and `__objects` (dict).
++ [x] `FileStorage().all()` works correctly.
++ [x] `FileStorage().new(obj)` works correctly.
++ [x] `FileStorage().save()` works correctly.
++ [x] `FileStorage().reload()` works correctly.
++ [x] All the tests above should be working for all models, which include `BaseModel`, `User`, `State`, `City`, `Amenity`, `Place`, and `Review`.
 
 ### HBNBCommand
 
@@ -55,9 +55,9 @@ This is a listing of the test cases to cover in the unittets of this project.
 + [ ] Running `all` prints a list consisting of the string representation of all BaseModel instances.
 + [x] Running `all 25` prints a non-existing class name error message.
 + [x] Running `all 25 User` prints a non-existing class name error message.
-+ [x] Running `all User` prints a list consisting of the string representation of all `User` instances.
-+ [x] Running `all "User"` prints a list consisting of the string representation of all `BaseModel` instances.
-+ [x] Running `all User 25` prints a list consisting of the string representation of all `User` instances.
++ [ ] Running `all User` prints a list consisting of the string representation of all `User` instances.
++ [ ] Running `all "User"` prints a list consisting of the string representation of all `BaseModel` instances.
++ [ ] Running `all User 25` prints a list consisting of the string representation of all `User` instances.
 
 #### _show_ Command
 
@@ -143,11 +143,12 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### _show_ Class Action
 
-+ [ ] Running `User.show(34)` prints an instance not found error message.
-+ [ ] Running `User.show(3.4)` prints an instance not found error message.
-+ [ ] Running `User.show("246c227a-d5c1")` prints an instance not found error message.
-+ [ ] Running `User.show("49faff9a-6318-451f-87b6-910505c55907")` prints the string representation of a `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.show("49faff9a-6318-451f-87b6-910505c55907", "246c227a-d5c1-403d-9bc7-6a47bb9f0f68")` prints only the string representation of a `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
++ [x] Running `User.show()` prints an instance id missing error message.
++ [x] Running `User.show(34)` prints an instance not found error message.
++ [x] Running `User.show(3.4)` prints an instance not found error message.
++ [x] Running `User.show("246c227a-d5c1")` prints an instance not found error message.
++ [x] Running `User.show("49faff9a-6318-451f-87b6-910505c55907")` prints the string representation of a `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
++ [x] Running `User.show("49faff9a-6318-451f-87b6-910505c55907", "246c227a-d5c1-403d-9bc7-6a47bb9f0f68")` prints only the string representation of a `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
 
 #### _destroy_ Class Action
 
