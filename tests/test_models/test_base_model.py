@@ -7,7 +7,7 @@ from datetime import datetime
 from time import sleep
 
 from models.base_model import BaseModel
-from tests import remove_files
+from tests import write_text_file
 
 
 class TestBaseModel(unittest.TestCase):
@@ -141,66 +141,49 @@ class TestBaseModel(unittest.TestCase):
     def test_save(self):
         """Tests the save function of the BaseModel class.
         """
-        # Tries to rename a file and delete it
-        try:
-            os.rename('file.json', 'random_name')
-        except IOError:
-            pass
-        try:
-            os.remove('file.json')
-        except IOError:
-            pass
-        try:
-            os.rename('random_name', 'file.json')
-        except IOError:
-            pass
-        # Tests for a single save
-        bm = BaseModel()
-        sleep(0.06)
-        updated_at_1 = bm.updated_at
-        bm.save()
-        self.assertLess(updated_at_1, bm.updated_at)
-        # Tests for a double save
-        bm = BaseModel()
-        sleep(0.06)
-        updated_at_1 = bm.updated_at
-        bm.save()
-        updated_at_2 = bm.updated_at
-        self.assertLess(updated_at_1, updated_at_2)
-        sleep(0.06)
-        bm.save()
-        self.assertLess(updated_at_2, bm.updated_at)
-        # Tests save with args
-        bm = BaseModel()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')
+        self.assertFalse(os.path.isfile('file.json'))
+        mdl = BaseModel()
+        mdl.save()
+        self.assertTrue(os.path.isfile('file.json'))
+        self.assertGreater(os.stat('file.json').st_size, 15)
         with self.assertRaises(TypeError):
-            bm.save(None)
+            BaseModel().save(mdl)
+        with self.assertRaises(TypeError):
+            BaseModel().save(BaseModel())
+        with self.assertRaises(TypeError):
+            BaseModel().save(None)
         # Tests save updates on file
-        bm = BaseModel()
-        bm.save()
-        bm_id = 'BaseModel.' + bm.id
+        write_text_file('file.json', '{}')
+        mdl = BaseModel()
+        mdl.save()
         with open('file.json', 'r') as f:
-            self.assertIn(bm_id, f.read())
+            line = f.readline()
+            self.assertIn('"id": ', line)
+            self.assertIn('"created_at": ', line)
+            self.assertIn('"updated_at": ', line)
 
     def test_to_dict(self):
         """Tests the to_dict function of the BaseModel class.
         """
         # Tests if it's a dictionary
-        bm = BaseModel()
-        self.assertIs(type(bm.to_dict()), dict)
+        self.assertIsInstance(BaseModel().to_dict(), dict)
         # Tests if to_dict contains accurate keys
-        self.assertIn('id', bm.to_dict())
-        self.assertIn('created_at', bm.to_dict())
-        self.assertIn('updated_at', bm.to_dict())
-        self.assertIn('__class__', bm.to_dict())
+        self.assertIn('id', BaseModel().to_dict())
+        self.assertIn('created_at', BaseModel().to_dict())
+        self.assertIn('updated_at', BaseModel().to_dict())
         # Tests if to_dict contains added attributes
-        bm.firstname = 'Celestine'
-        bm.lastname = 'Akpanoko'
-        self.assertIn('firstname', bm.to_dict())
-        self.assertIn('lastname', bm.to_dict())
+        mdl = BaseModel()
+        mdl.firstname = 'Celestine'
+        mdl.lastname = 'Akpanoko'
+        self.assertIn('firstname', mdl.to_dict())
+        self.assertIn('lastname', mdl.to_dict())
+        self.assertIn('firstname', BaseModel(firstname='Celestine').to_dict())
+        self.assertIn('lastname', BaseModel(lastname='Akpanoko').to_dict())
         # Tests to_dict datetime attributes if they are strings
-        bm_dict = bm.to_dict()
-        self.assertEqual(str, type(bm_dict['created_at']))
-        self.assertEqual(str, type(bm_dict['updated_at']))
+        self.assertIsInstance(BaseModel().to_dict()['created_at'], str)
+        self.assertIsInstance(BaseModel().to_dict()['updated_at'], str)
         # Tests to_dict output
         datetime_now = datetime.today()
         bm = BaseModel()
@@ -213,9 +196,33 @@ class TestBaseModel(unittest.TestCase):
             'updated_at': datetime_now.isoformat()
         }
         self.assertDictEqual(bm.to_dict(), to_dict)
+        self.assertDictEqual(
+            BaseModel(id='u-b34', age=13).to_dict(), {
+                '__class__': 'BaseModel',
+                'id': 'u-b34',
+                'age': 13
+            }
+        )
+        self.assertDictEqual(
+            BaseModel(id='u-b34', age=None).to_dict(), {
+                '__class__': 'BaseModel',
+                'id': 'u-b34',
+                'age': None
+            }
+        )
         # Tests to_dict output contradiction
         bm_d = BaseModel()
+        self.assertIn('__class__', BaseModel().to_dict())
+        self.assertNotIn('__class__', BaseModel().__dict__)
         self.assertNotEqual(bm_d.to_dict(), bm_d.__dict__)
+        self.assertNotEqual(
+            bm_d.to_dict()['__class__'],
+            bm_d.__class__
+        )
         # Tests to_dict with arg
         with self.assertRaises(TypeError):
-            bm_d.to_dict(None)
+            BaseModel().to_dict(None)
+        with self.assertRaises(TypeError):
+            BaseModel().to_dict(BaseModel())
+        with self.assertRaises(TypeError):
+            BaseModel().to_dict(45)
