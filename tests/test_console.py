@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """A unit test module for the console (command interpreter).
 """
+from datetime import datetime
 import os
 import unittest
 from io import StringIO
@@ -274,8 +275,84 @@ class TestHBNBCommand(unittest.TestCase):
             HBNBCommand().onecmd('show User %$ {}'.format(mdl.id))
             self.assertEqual(istdout.getvalue(), '** no instance found **\n')
 
-    # def test_do_destroy(self):
-    #   pass
+    def test_do_destroy(self):
+        """Tests the do_destroy function of the HBNBCommand class.
+        """
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('destroy')
+            self.assertEqual(istdout.getvalue(), "** class name missing **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('destroy 78')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('destroy 78 User')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('destroy City')
+            self.assertEqual(istdout.getvalue(), "** instance id missing **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('destroy Review ytq')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = User()
+            mdl.save()
+            self.assertIn(mdl, storage.all().values())
+            HBNBCommand().onecmd('destroy User {}'.format(mdl.id))
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertNotIn(mdl, storage.all().values())
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = User()
+            mdl.save()
+            self.assertIn(mdl, storage.all().values())
+            HBNBCommand().onecmd('destroy BaseModel {}'.format(mdl.id))
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertNotIn(mdl, storage.all().values())
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = User()
+            mdl1 = User()
+            mdl.save()
+            mdl1.save()
+            self.assertIn(mdl, storage.all().values())
+            self.assertIn(mdl1, storage.all().values())
+            HBNBCommand().onecmd('destroy User {} {}'.format(mdl.id, mdl1.id))
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertNotIn(mdl, storage.all().values())
+            self.assertIn(mdl1, storage.all().values())
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = User()
+            mdl1 = City()
+            mdl.save()
+            mdl1.save()
+            self.assertIn(mdl, storage.all().values())
+            self.assertIn(mdl1, storage.all().values())
+            HBNBCommand().onecmd(
+                'destroy User {} City {}'.format(mdl.id, mdl1.id)
+            )
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertNotIn(mdl, storage.all().values())
+            self.assertIn(mdl1, storage.all().values())
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = User()
+            mdl1 = User()
+            mdl.save()
+            mdl1.save()
+            self.assertIn(mdl, storage.all().values())
+            self.assertIn(mdl1, storage.all().values())
+            HBNBCommand().onecmd(
+                'destroy User {} User {}'.format(mdl.id, mdl1.id)
+            )
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertNotIn(mdl, storage.all().values())
+            self.assertIn(mdl1, storage.all().values())
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = User()
+            mdl.save()
+            self.assertIn(mdl, storage.all().values())
+            HBNBCommand().onecmd('destroy User %$ {}'.format(mdl.id))
+            self.assertEqual(istdout.getvalue(), '** no instance found **\n')
+            self.assertIn(mdl, storage.all().values())
 
     def test_do_all(self):
         """Tests the do_all function of the HBNBCommand class.
@@ -477,8 +554,89 @@ class TestHBNBCommand(unittest.TestCase):
                 r'\["\[Review\] \({}\) {}"\]\n'.format(mdl.id, r'\{.+\}')
             )
 
-    # def test_do_update(self):
-    #   pass
+    def test_do_update(self):
+        """Tests the do_update function of the HBNBCommand class.
+        """
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('update')
+            self.assertEqual(istdout.getvalue(), "** class name missing **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('update 78')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('update 78 User')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('update City')
+            self.assertEqual(istdout.getvalue(), "** instance id missing **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('update Review ytq')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('update State gggh name California')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        mdl_s = City()
+        mdl_s.save()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('update City {}'.format(mdl_s.id))
+            self.assertEqual(
+                istdout.getvalue(),
+                "** attribute name missing **\n"
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(mdl_s.name, '')
+            HBNBCommand().onecmd('update City {} name'.format(mdl_s.id))
+            self.assertEqual(istdout.getvalue(), "** value missing **\n")
+            self.assertEqual(mdl_s.name, '')
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(mdl_s.name, '')
+            if os.path.isfile('file.json'):
+                os.unlink('file.json')
+            self.assertFalse(os.path.isfile('file.json'))
+            HBNBCommand().onecmd('update City {} name Paris'.format(mdl_s.id))
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertTrue(os.path.isfile('file.json'))
+            self.assertEqual(mdl_s.name, 'Paris')
+        # only one attribute can be updated in a single command line
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertNotEqual(mdl_s.name, 'Madrid')
+            self.assertFalse(hasattr(mdl_s, 'population'))
+            HBNBCommand().onecmd(
+                'update City {} name Madrid population 345'.format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertEqual(mdl_s.name, 'Madrid')
+            self.assertFalse(hasattr(mdl_s, 'population'))
+        # id, created_at, and updated_at can't be updated
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertNotEqual(mdl_s.id, 'c-589')
+            HBNBCommand().onecmd(
+                'update City {} id c-589'.format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.id, 'c-589')
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            time_s = datetime(2003, 5, 15)
+            self.assertNotEqual(mdl_s.created_at, time_s)
+            HBNBCommand().onecmd(
+                'update City {} created_at "{}"'.format(
+                    mdl_s.id, time_s.isoformat()
+                    )
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.created_at, time_s)
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            time_s = datetime(2003, 5, 15)
+            self.assertNotEqual(mdl_s.updated_at, time_s)
+            HBNBCommand().onecmd(
+                'update City {} updated_at "{}"'.format(
+                    mdl_s.id, time_s.isoformat()
+                    )
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.updated_at, time_s)
 
     def test_class_action(self):
         """Tests the class action syntax of the HBNBCommand class.
@@ -558,8 +716,114 @@ class TestHBNBCommand(unittest.TestCase):
             HBNBCommand().precmd('foo.all()')
             self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
 
-    # def test_cls_all(self):
-    #     pass
+    def test_cls_all(self):
+        """Tests the all class action of the HBNBCommand class.
+        """
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
+            HBNBCommand().precmd('User.all()')
+            self.assertEqual(istdout.getvalue(), "[]\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
+            HBNBCommand().precmd('User.all("49faff9a-6318-451f-87b6")')
+            self.assertEqual(istdout.getvalue(), "[]\n")
+        # creating objects and showing them
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = BaseModel()
+            mdl.save()
+            HBNBCommand().precmd('BaseModel.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[BaseModel\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = Amenity()
+            mdl.save()
+            HBNBCommand().precmd('BaseModel.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[Amenity\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = User()
+            mdl.save()
+            HBNBCommand().precmd('User.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[User\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = State()
+            mdl.save()
+            HBNBCommand().precmd('State.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[State\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = City()
+            mdl.save()
+            HBNBCommand().precmd('City.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[City\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = Amenity()
+            mdl.save()
+            HBNBCommand().precmd('Amenity.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[Amenity\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = Place()
+            mdl.save()
+            HBNBCommand().precmd('Place.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[Place\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = Review()
+            mdl.save()
+            HBNBCommand().precmd('Review.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[Review\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
+            )
+        # creating multiple objects and showing them
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            a = City()
+            b = City()
+            a.save()
+            b.save()
+            HBNBCommand().precmd('City.all()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[\[City\] \(({}|{})\) {}, '.format(a.id, b.id, r'\{.+\}')
+                + r'\[City\] \(({}|{})\) {}\]\n'.format(a.id, b.id, r'\{.+\}')
+            )
 
     def test_cls_count(self):
         """Tests the count class action of the HBNBCommand class.
@@ -567,103 +831,95 @@ class TestHBNBCommand(unittest.TestCase):
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('User.count("49faff9a-6318-451f-87b6")')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('User.count(None)')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('User.count()')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('BaseModel.count()')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('State.count()')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('City.count()')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('Amenity.count()')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('Place.count()')
             self.assertEqual(istdout.getvalue(), "0\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(len(storage.all()), 0)
             HBNBCommand().precmd('Review.count()')
             self.assertEqual(istdout.getvalue(), "0\n")
         # creating objects and counting them
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('create BaseModel')
-            HBNBCommand().precmd('create BaseModel')
+            BaseModel().save()
+            Review().save()
             HBNBCommand().precmd('BaseModel.count()')
-            self.assertRegex(
-                istdout.getvalue(),
-                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
-            )
+            self.assertEqual(istdout.getvalue(), '2\n')
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('create User')
-            HBNBCommand().precmd('create User')
+            User().save()
+            User().save()
             HBNBCommand().precmd('User.count()')
-            self.assertRegex(
-                istdout.getvalue(),
-                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
-            )
+            self.assertEqual(istdout.getvalue(), '2\n')
         remove_files()
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('create State')
-            HBNBCommand().precmd('create State')
+            State().save()
+            State().save()
+            State().save()
             HBNBCommand().precmd('State.count()')
-            self.assertRegex(
-                istdout.getvalue(),
-                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
-            )
+            self.assertEqual(istdout.getvalue(), '3\n')
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('create City')
-            HBNBCommand().precmd('create City')
+            City().save()
+            City().save()
+            City().save()
+            City().save()
             HBNBCommand().precmd('City.count()')
-            self.assertRegex(
-                istdout.getvalue(),
-                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
-            )
+            self.assertEqual(istdout.getvalue(), '4\n')
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('create Amenity')
-            HBNBCommand().precmd('create Amenity')
+            Amenity().save()
+            Amenity().save()
+            Amenity().save()
             HBNBCommand().precmd('Amenity.count()')
-            self.assertRegex(
-                istdout.getvalue(),
-                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
-            )
+            self.assertEqual(istdout.getvalue(), '3\n')
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('create Place')
-            HBNBCommand().precmd('create Place')
+            Place().save()
+            Place().save()
             HBNBCommand().precmd('Place.count()')
-            self.assertRegex(
-                istdout.getvalue(),
-                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
-            )
+            self.assertEqual(istdout.getvalue(), '2\n')
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
-            HBNBCommand().precmd('create Review')
-            HBNBCommand().precmd('create Review')
-            HBNBCommand().precmd('create Review')
+            Review().save()
+            Review().save()
+            Review().save()
             HBNBCommand().precmd('Review.count()')
-            self.assertRegex(
-                istdout.getvalue(),
-                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){3}3\n'
-            )
+            self.assertEqual(istdout.getvalue(), '3\n')
         write_text_file('file.json', '{}')
         storage.reload()
 
@@ -691,6 +947,16 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertRegex(
                 istdout.getvalue(),
                 r'\[BaseModel\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = Amenity()
+            mdl.save()
+            HBNBCommand().precmd('BaseModel.show("{}")'.format(mdl.id))
+            self.assertRegex(
+                istdout.getvalue(),
+                r'\[Amenity\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
             )
         write_text_file('file.json', '{}')
         storage.reload()
@@ -766,8 +1032,56 @@ class TestHBNBCommand(unittest.TestCase):
         write_text_file('file.json', '{}')
         storage.reload()
 
-    # def test_cls_destroy(self):
-    #     pass
+    def test_cls_destroy(self):
+        """Tests the destroy class action of the HBNBCommand class.
+        """
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.destroy()')
+            self.assertEqual(istdout.getvalue(), "** instance id missing **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.destroy("49faff9a-6318-451f-87b6")')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.destroy(2)')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        # creating objects and destroying them
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = State()
+            mdl.save()
+            self.assertIn('State.{}'.format(mdl.id), storage.all().keys())
+            HBNBCommand().precmd('BaseModel.destroy("{}")'.format(mdl.id))
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertNotIn('State.{}'.format(mdl.id), storage.all().keys())
+        # only instances of the respective class can be destroyed
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            mdl = State()
+            mdl.save()
+            self.assertIn('State.{}'.format(mdl.id), storage.all().keys())
+            HBNBCommand().precmd('Amenity.destroy("{}")'.format(mdl.id))
+            self.assertEqual(istdout.getvalue(), '** no instance found **\n')
+            self.assertIn('State.{}'.format(mdl.id), storage.all().keys())
+        # only one item can be destroyed in each line
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            a = State()
+            b = State()
+            a.save()
+            b.save()
+            self.assertIn('State.{}'.format(a.id), storage.all().keys())
+            self.assertIn('State.{}'.format(b.id), storage.all().keys())
+            HBNBCommand().precmd(
+                'State.destroy("{}", "{}")'.format(a.id, b.id)
+            )
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertNotIn('State.{}'.format(a.id), storage.all().keys())
+            self.assertIn('State.{}'.format(b.id), storage.all().keys())
 
-    # def test_cls_destroy(self):
+    # def test_cls_update(self):
     #     pass

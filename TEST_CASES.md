@@ -76,37 +76,37 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### _destroy_ Command
 
-+ [ ] Running `destroy` prints a missing class name error message.
-+ [ ] Running `destroy 25` prints a non-existing class name error message.
-+ [ ] Running `destroy 25 User` prints a non-existing class name error message.
-+ [ ] Running `destroy 49faff9a-6318-451f-87b6-910505c55907 User` prints a non-existing class name error message.
-+ [ ] Running `destroy User` prints a missing id error message.
-+ [ ] Running `destroy "User"` prints a missing id error message.
-+ [ ] Running `destroy User 35` prints a non-existing instance id error message.
-+ [ ] Running `destroy User 35 49faff9a-6318-451f-87b6-910505c55907` prints a non-existing instance id error message.
-+ [ ] Running `destroy State 49faff9a-6318-451f-87b6-910505c55907` deletes a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `destroy State 49faff9a-6318-451f-87b6-910505c55907 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` deletes only the State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `destroy State 49faff9a-6318-451f-87b6-910505c55907 State 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` deletes only the State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `destroy State 49faff9a-6318-451f-87b6-910505c55907 Place 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` deletes only the State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] The `destroy` class action always commits its changes and prints nothing to `stdout` upon a successful execution.
++ [x] Running `destroy` prints a missing class name error message.
++ [x] Running `destroy 25` prints a non-existing class name error message.
++ [x] Running `destroy 25 User` prints a non-existing class name error message.
++ [x] Running `destroy 49faff9a-6318-451f-87b6-910505c55907 User` prints a non-existing class name error message.
++ [x] Running `destroy User` prints a missing id error message.
++ [x] Running `destroy "User"` prints a missing id error message.
++ [x] Running `destroy User 35` prints a non-existing instance id error message.
++ [x] Running `destroy User 35 49faff9a-6318-451f-87b6-910505c55907` prints a non-existing instance id error message.
++ [x] Running `destroy State 49faff9a-6318-451f-87b6-910505c55907` deletes a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `destroy State 49faff9a-6318-451f-87b6-910505c55907 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` deletes only the State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `destroy State 49faff9a-6318-451f-87b6-910505c55907 State 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` deletes only the State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `destroy State 49faff9a-6318-451f-87b6-910505c55907 Place 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` deletes only the State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] The `destroy` class action always commits its changes and prints nothing to `stdout` upon a successful execution.
 
 #### _update_ Command
 
-+ [ ] Running `update` prints a missing class name error message.
-+ [ ] Running `update 25` prints a non-existing class name error message.
-+ [ ] Running `update 25 User` prints a non-existing class name error message.
-+ [ ] Running `update 49faff9a-6318-451f-87b6-910505c55907 User` prints a non-existing class name error message.
-+ [ ] Running `update User` or `update "User"` prints a missing id error message.
-+ [ ] Running `update User 35` prints a non-existing instance id error message.
-+ [ ] Running `update User 35 49faff9a-6318-451f-87b6-910505c55907` prints a non-existing instance id error message.
-+ [ ] Running `update User 49faff9a-6318-451f-87b6-910505c55907` prints a missing attribute name error message.
-+ [ ] Running `update User 49faff9a-6318-451f-87b6-910505c55907 age` prints a missing attribute value error message.
-+ [ ] Running `update User 49faff9a-6318-451f-87b6-910505c55907 age 34` adds the attribute `age` with a value of `34` to the `User` object with id `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `update User 49faff9a-6318-451f-87b6-910505c55907 age 34 height 1.8m` adds the attribute `age` with a value of `34` to the `User` object with `id` `49faff9a-6318-451f-87b6-910505c55907` only.
-+ [ ] Running `update User 49faff9a-6318-451f-87b6-910505c55907 id 34` doesn't change the `id` of the `User` object with `id` `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `update User 49faff9a-6318-451f-87b6-910505c55907 created_at "datetime.datetime(2017, 10, 2, 3, 11, 3, 49401)"` doesn't change the `created_at` attribute of the `User` object with `id` `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `update User 49faff9a-6318-451f-87b6-910505c55907 updated_at "datetime.datetime(2017, 10, 2, 3, 11, 3, 49401)"` doesn't change the `updated_at` attribute of the `User` object with `id` `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] The `update` command always commits its changes and prints nothing to `stdout` upon a successful execution.
++ [x] Running `update` prints a missing class name error message.
++ [x] Running `update 25` prints a non-existing class name error message.
++ [x] Running `update 25 User` prints a non-existing class name error message.
++ [x] Running `update 49faff9a-6318-451f-87b6-910505c55907 User` prints a non-existing class name error message.
++ [x] Running `update User` or `update "User"` prints a missing id error message.
++ [x] Running `update User 35` prints a non-existing instance id error message.
++ [x] Running `update User 35 49faff9a-6318-451f-87b6-910505c55907` prints a non-existing instance id error message.
++ [x] Running `update User 49faff9a-6318-451f-87b6-910505c55907` prints a missing attribute name error message.
++ [x] Running `update User 49faff9a-6318-451f-87b6-910505c55907 age` prints a missing attribute value error message.
++ [x] Running `update User 49faff9a-6318-451f-87b6-910505c55907 age 34` adds the attribute `age` with a value of `34` to the `User` object with id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `update User 49faff9a-6318-451f-87b6-910505c55907 age 34 height 1.8m` adds the attribute `age` with a value of `34` to the `User` object with `id` `49faff9a-6318-451f-87b6-910505c55907` only.
++ [x] Running `update User 49faff9a-6318-451f-87b6-910505c55907 id 34` doesn't change the `id` of the `User` object with `id` `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `update User 49faff9a-6318-451f-87b6-910505c55907 created_at "datetime.datetime(2017, 10, 2, 3, 11, 3, 49401)"` doesn't change the `created_at` attribute of the `User` object with `id` `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `update User 49faff9a-6318-451f-87b6-910505c55907 updated_at "datetime.datetime(2017, 10, 2, 3, 11, 3, 49401)"` doesn't change the `updated_at` attribute of the `User` object with `id` `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] The `update` command always commits its changes and prints nothing to `stdout` upon a successful execution.
 
 
 
@@ -128,10 +128,10 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### _all_ Class Action
 
-+ [ ] Running `User.all()` prints a list consisting of the string representation of all `User` objects, not enclosed by quotes but separated by a comma.
-+ [ ] Running `User.all("49faff9a-6318-451f-87b6-910505c55907")` prints a list consisting of the string representation of all `User` objects, not enclosed by quotes but separated by a comma.
-+ [ ] Running `User.all(None)` prints a list consisting of the string representation of all `User` objects, not enclosed by quotes but separated by a comma.
-+ [ ] Running `User.all(12, '34')` prints a list consisting of the string representation of all `User` objects, not enclosed by quotes but separated by a comma.
++ [x] Running `User.all()` prints a list consisting of the string representation of all `User` objects, not enclosed by quotes but separated by a comma.
++ [x] Running `User.all("49faff9a-6318-451f-87b6-910505c55907")` prints a list consisting of the string representation of all `User` objects, not enclosed by quotes but separated by a comma.
++ [x] Running `User.all(None)` prints a list consisting of the string representation of all `User` objects, not enclosed by quotes but separated by a comma.
++ [x] Running `User.all(12, '34')` prints a list consisting of the string representation of all `User` objects, not enclosed by quotes but separated by a comma.
 
 #### _count_ Class Action
 
@@ -152,12 +152,12 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### _destroy_ Class Action
 
-+ [ ] Running `User.destroy(34)` prints an instance not found error message.
-+ [ ] Running `User.destroy(3.4)` prints an instance not found error message.
-+ [ ] Running `User.destroy("246c227a-d5c1")` prints an instance not found error message.
-+ [ ] Running `User.destroy("49faff9a-6318-451f-87b6-910505c55907")` deletes the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.destroy("49faff9a-6318-451f-87b6-910505c55907", "246c227a-d5c1-403d-9bc7-6a47bb9f0f68")` deletes only the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
-+ [ ] The `destroy` class action always commits its changes and prints nothing to `stdout` upon a successful execution.
++ [x] Running `User.destroy(34)` prints an instance not found error message.
++ [x] Running `User.destroy(3.4)` prints an instance not found error message.
++ [x] Running `User.destroy("246c227a-d5c1")` prints an instance not found error message.
++ [x] Running `User.destroy("49faff9a-6318-451f-87b6-910505c55907")` deletes the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists and the object is an instance of `User`, otherwise it prints an instance not found error message.
++ [x] Running `User.destroy("49faff9a-6318-451f-87b6-910505c55907", "246c227a-d5c1-403d-9bc7-6a47bb9f0f68")` deletes only the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
++ [x] The `destroy` class action always commits its changes and prints nothing to `stdout` upon a successful execution.
 
 #### _update_ Class Action
 
