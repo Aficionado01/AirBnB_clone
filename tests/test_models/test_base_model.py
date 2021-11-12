@@ -143,17 +143,17 @@ class TestBaseModel(unittest.TestCase):
         """
         # Tries to rename a file and delete it
         try:
-            os.rename('file.json', 'random_name')
-        except IOError:
-            pass
+            os.rename('file.json', 'foo')
+        except IOError as e:
+            print(e)
         try:
             os.remove('file.json')
-        except IOError:
-            pass
+        except IOError as e:
+            print(e)
         try:
-            os.rename('random_name', 'file.json')
-        except IOError:
-            pass
+            os.rename('foo', 'file.json')
+        except IOError as e:
+            print(e)
         # Tests for a single save
         bm = BaseModel()
         sleep(0.06)
@@ -193,8 +193,8 @@ class TestBaseModel(unittest.TestCase):
         self.assertIn('updated_at', bm.to_dict())
         self.assertIn('__class__', bm.to_dict())
         # Tests if to_dict contains added attributes
-        bm.firstname = 'Celestine'
-        bm.lastname = 'Akpanoko'
+        bm.author_1 = 'Bezaleel'
+        bm.author_2 = 'Celestine'
         self.assertIn('firstname', bm.to_dict())
         self.assertIn('lastname', bm.to_dict())
         # Tests to_dict datetime attributes if they are strings
