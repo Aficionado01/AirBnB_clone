@@ -6,20 +6,20 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 ### BaseModel
 
-+ [ ] `BaseModel` contains the public instance attributes: `id` (str), `created_at` (datetime), and `updated_at` (datetime).
-+ [ ] `BaseModel()` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object.
-+ [ ] `BaseModel(None)` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object.
-+ [ ] `BaseModel('56d43177-cc5f-4d6c-a0c1-e167f8c27337')` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object that is not `56d43177-cc5f-4d6c-a0c1-e167f8c27337`.
-+ [ ] `BaseModel(**{})` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object.
-+ [ ] `BaseModel('78', datetime.now(), datetime.now(), **{})` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object.
-+ [ ] `BaseModel(**{'id': None})` creates a `BaseModel` object without the `created_at` and `updated_at` attributes, and the `id` attribute is `None`.
-+ [ ] `BaseModel(**{'id': 45})` creates a `BaseModel` object without the `created_at` and `updated_at` attributes, and the `id` attribute is `45`.
-+ [ ] `BaseModel(**{'id': 45, '__class__': 'Foo'})` creates a `BaseModel` object without the `__class__`, `created_at` and `updated_at` attributes, and the `id` attribute is `45`.
-+ [ ] `BaseModel(**{'id': '56d43177-cc5f-4d6c-a0c1-e167f8c27337', 'created_at': datetime(2017, 9, 28, 21, 3, 54, 52298)})` throws a `TypeError` for `created_at`.
-+ [ ] `BaseModel(**{'id': '56d43177-cc5f-4d6c-a0c1-e167f8c27337', 'updated_at': datetime(2017, 9, 28, 21, 3, 54, 52298)})` throws a `TypeError` for `updated_at`.
-+ [ ] `str(BaseModel())` works correctly.
-+ [ ] `BaseModel().save()` works correctly.
-+ [ ] `BaseModel().to_dict()` works correctly.
++ [x] `BaseModel` contains the public instance attributes: `id` (str), `created_at` (datetime), and `updated_at` (datetime).
++ [x] `BaseModel()` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object.
++ [x] `BaseModel(None)` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object.
++ [x] `BaseModel('56d43177-cc5f-4d6c-a0c1-e167f8c27337')` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object that is not `56d43177-cc5f-4d6c-a0c1-e167f8c27337`.
++ [x] `BaseModel(**{})` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object.
++ [x] `BaseModel('78', datetime.now(), datetime.now(), **{})` creates a `BaseModel` object using the current datetime for `created_at` and `updated_at`, and creates a unique `id` for the object.
++ [x] `BaseModel(**{'id': None})` creates a `BaseModel` object without the `created_at` and `updated_at` attributes, and the `id` attribute is `None`.
++ [x] `BaseModel(**{'id': 45})` creates a `BaseModel` object without the `created_at` and `updated_at` attributes, and the `id` attribute is `45`.
++ [x] `BaseModel(**{'id': 45, '__class__': 'Foo'})` creates a `BaseModel` object without the  `created_at` and `updated_at` attributes, and the `id` attribute is `45`.
++ [x] `BaseModel(**{'id': '56d43177-cc5f-4d6c-a0c1-e167f8c27337', 'created_at': datetime(2017, 9, 28, 21, 3, 54, 52298)})` throws a `TypeError` for `created_at`.
++ [x] `BaseModel(**{'id': '56d43177-cc5f-4d6c-a0c1-e167f8c27337', 'updated_at': datetime(2017, 9, 28, 21, 3, 54, 52298)})` throws a `TypeError` for `updated_at`.
++ [x] `str(BaseModel())` works correctly.
++ [x] `BaseModel().save()` works correctly.
++ [x] `BaseModel().to_dict()` works correctly.
 
 ### FileStorage
 
@@ -52,27 +52,27 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### _all_ Command
 
-+ [ ] Running `all` prints a list consisting of the string representation of all BaseModel instances.
++ [x] Running `all` prints a list consisting of the string representation of all BaseModel instances.
 + [x] Running `all 25` prints a non-existing class name error message.
 + [x] Running `all 25 User` prints a non-existing class name error message.
-+ [ ] Running `all User` prints a list consisting of the string representation of all `User` instances.
-+ [ ] Running `all "User"` prints a list consisting of the string representation of all `BaseModel` instances.
-+ [ ] Running `all User 25` prints a list consisting of the string representation of all `User` instances.
++ [x] Running `all User` prints a list consisting of the string representation of all `User` instances.
++ [x] Running `all "User"` prints a list consisting of the string representation of all `BaseModel` instances.
++ [x] Running `all User 25` prints a list consisting of the string representation of all `User` instances.
 
 #### _show_ Command
 
-+ [ ] Running `show` prints a missing class name error message.
-+ [ ] Running `show 25` prints a non-existing class name error message.
-+ [ ] Running `show 25 User` prints a non-existing class name error message.
-+ [ ] Running `show 49faff9a-6318-451f-87b6-910505c55907 User` prints a non-existing class name error message.
-+ [ ] Running `show User` prints a missing id error message.
-+ [ ] Running `show "User"` prints a missing id error message.
-+ [ ] Running `show User 35` prints a non-existing instance id error message.
-+ [ ] Running `show User 35 49faff9a-6318-451f-87b6-910505c55907` prints a non-existing instance id error message.
-+ [ ] Running `show State 49faff9a-6318-451f-87b6-910505c55907` prints the string representation of a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `show State 49faff9a-6318-451f-87b6-910505c55907 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` prints only the string representation of a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `show State 49faff9a-6318-451f-87b6-910505c55907 State 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` prints only the string representation of a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
-+ [ ] Running `show State 49faff9a-6318-451f-87b6-910505c55907 Place 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` prints only the string representation of a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `show` prints a missing class name error message.
++ [x] Running `show 25` prints a non-existing class name error message.
++ [x] Running `show 25 User` prints a non-existing class name error message.
++ [x] Running `show 49faff9a-6318-451f-87b6-910505c55907 User` prints a non-existing class name error message.
++ [x] Running `show User` prints a missing id error message.
++ [x] Running `show "User"` prints a missing id error message.
++ [x] Running `show User 35` prints a non-existing instance id error message.
++ [x] Running `show User 35 49faff9a-6318-451f-87b6-910505c55907` prints a non-existing instance id error message.
++ [x] Running `show State 49faff9a-6318-451f-87b6-910505c55907` prints the string representation of a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `show State 49faff9a-6318-451f-87b6-910505c55907 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` prints only the string representation of a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `show State 49faff9a-6318-451f-87b6-910505c55907 State 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` prints only the string representation of a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
++ [x] Running `show State 49faff9a-6318-451f-87b6-910505c55907 Place 2dd6ef5c-467c-4f82-9521-a772ea7d84e9` prints only the string representation of a State model with the id `49faff9a-6318-451f-87b6-910505c55907`.
 
 #### _destroy_ Command
 

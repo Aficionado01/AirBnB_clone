@@ -144,8 +144,10 @@ class TestBaseModel(unittest.TestCase):
         if os.path.isfile('file.json'):
             os.unlink('file.json')
         self.assertFalse(os.path.isfile('file.json'))
-        mdl = BaseModel()
+        mdl = BaseModel(id='this -is-a-unique-id')
+        self.assertFalse(hasattr(mdl, 'updated_at'))
         mdl.save()
+        self.assertTrue(hasattr(mdl, 'updated_at'))
         self.assertTrue(os.path.isfile('file.json'))
         self.assertGreater(os.stat('file.json').st_size, 15)
         with self.assertRaises(TypeError):
