@@ -1,6 +1,6 @@
 # Test Cases
 
-This is a listing of the test cases to cover in the unittets of this project.
+This is a listing of the test cases to cover in the unit tests of this project.
 
 ## Test Cases To Cover
 
@@ -161,65 +161,66 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### _update_ Class Action
 
-+ [ ] Running `User.update(34)` prints an instance not found error message.
-+ [ ] Running `User.update(3.4)` prints an instance not found error message.
-+ [ ] Running `User.update("246c227a-d5c1")` prints an instance not found error message.
-+ [ ] Running `User.update("49faff9a-6318-451f-87b6-910505c55907")` prints an attribute name missing error message if the `User` object `id` exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", "age")` prints an attribute value missing error message if the `User` object `id` exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", "age", 74)` sets the value of the `age` attribute to `74` of the `User` object with `id == "49faff9a-6318-451f-87b6-910505c55907"` if it exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", "age", 74, 33)` sets the value of the `age` attribute to `74` of the `User` object with `id == "49faff9a-6318-451f-87b6-910505c55907"` if it exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", "age", 74, "height", "1.67m")` sets only the value of the `age` attribute to `74` of the `User` object with `id == "49faff9a-6318-451f-87b6-910505c55907"` if it exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", {})` performs no update to the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", {"age": 74})` sets only the value of the `age` attribute to `74` of the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
-+ [ ] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", {"age": 74}, "hair_color", "pink")` sets only the value of the `age` attribute to `74` of the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
-+ [ ] The `update` class action always commits its changes and prints nothing to `stdout` upon a successful execution.
-+ [ ] All the tests above should be working for all models, which include `BaseModel`, `User`, `State`, `City`, `Amenity`, `Place`, and `Review`.
++ [x] Running `User.update()` prints an instance id missing error message.
++ [x] Running `User.update(34)` prints an instance not found error message.
++ [x] Running `User.update(3.4)` prints an instance not found error message.
++ [x] Running `User.update("246c227a-d5c1")` prints an instance not found error message.
++ [x] Running `User.update("49faff9a-6318-451f-87b6-910505c55907")` prints an attribute name missing error message if the `User` object `id` exists, otherwise it prints an instance not found error message.
++ [x] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", "age")` prints an attribute value missing error message if the `User` object `id` exists, otherwise it prints an instance not found error message.
++ [x] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", "age", 74)` sets the value of the `age` attribute to `74` of the `User` object with `id == "49faff9a-6318-451f-87b6-910505c55907"` if it exists, otherwise it prints an instance not found error message.
++ [x] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", "age", 74, 33)` sets the value of the `age` attribute to `74` of the `User` object with `id == "49faff9a-6318-451f-87b6-910505c55907"` if it exists, otherwise it prints an instance not found error message.
++ [x] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", "age", 74, "height", "1.67m")` sets only the value of the `age` attribute to `74` of the `User` object with `id == "49faff9a-6318-451f-87b6-910505c55907"` if it exists, otherwise it prints an instance not found error message.
++ [x] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", {})` performs no update to the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
++ [x] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", {"age": 74})` sets only the value of the `age` attribute to `74` of the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
++ [x] Running `User.update("49faff9a-6318-451f-87b6-910505c55907", {"age": 74}, "hair_color", "pink")` sets only the value of the `age` attribute to `74` of the `User` object with the `id` `49faff9a-6318-451f-87b6-910505c55907` if it exists, otherwise it prints an instance not found error message.
++ [x] The `update` class action always commits its changes and prints nothing to `stdout` upon a successful execution.
++ [x] All the tests above should be working for all models, which include `BaseModel`, `User`, `State`, `City`, `Amenity`, `Place`, and `Review`.
 
 ### User
 
 + [x] `User` is an instance of `BaseModel`.
 + [x] `User` contains the public class attributes: `email` (str), `password` (str), `first_name` (str), and `last_name` (str).
-+ [ ] `str(User())` works correctly.
-+ [ ] `User().save()` works correctly.
-+ [ ] `User().to_dict()` works correctly.
++ [x] `str(User())` works correctly.
++ [x] `User().save()` works correctly.
++ [x] `User().to_dict()` works correctly.
 
 ### State
 
 + [x] `State` is an instance of `BaseModel`.
 + [x] `State` contains the public class attribute `name` (str).
-+ [ ] `str(State())` works correctly.
-+ [ ] `State().save()` works correctly.
-+ [ ] `State().to_dict()` works correctly.
++ [x] `str(State())` works correctly.
++ [x] `State().save()` works correctly.
++ [x] `State().to_dict()` works correctly.
 
 ### City
 
 + [x] `City` is an instance of `BaseModel`.
 + [x] `City` contains the public class attributes: `state_id` (str) and `name` (str).
-+ [ ] `str(City())` works correctly.
-+ [ ] `City().save()` works correctly.
-+ [ ] `City().to_dict()` works correctly.
++ [x] `str(City())` works correctly.
++ [x] `City().save()` works correctly.
++ [x] `City().to_dict()` works correctly.
 
 ### Amenity
 
 + [x] `Amenity` is an instance of `BaseModel`.
 + [x] `Amenity` contains the public class attribute `name` (str).
-+ [ ] `str(Amenity())` works correctly.
-+ [ ] `Amenity().save()` works correctly.
-+ [ ] `Amenity().to_dict()` works correctly.
++ [x] `str(Amenity())` works correctly.
++ [x] `Amenity().save()` works correctly.
++ [x] `Amenity().to_dict()` works correctly.
 
 ### Place
 
 + [x] `Place` is an instance of `BaseModel`.
 + [x] `Place` contains the public class attributes: `city_id` (str), `user_id` (str), `name` (str), `description` (str), `number_rooms` (int), `number_bathrooms` (int), `max_guest` (int), `price_by_night` (int), `latitude` (float), `longitude` (float), and `amenity_ids` (list).
-+ [ ] `str(Place())` works correctly.
-+ [ ] `Place().save()` works correctly.
-+ [ ] `Place().to_dict()` works correctly.
++ [x] `str(Place())` works correctly.
++ [x] `Place().save()` works correctly.
++ [x] `Place().to_dict()` works correctly.
 
 ### Review
 
 + [x] `Review` is an instance of `BaseModel`.
 + [x] `Review` contains the public class attributes: `place_id` (str), `user_id` (str), and `text` (str).
-+ [ ] `str(Review())` works correctly.
-+ [ ] `Review().save()` works correctly.
-+ [ ] `Review().to_dict()` works correctly.
++ [x] `str(Review())` works correctly.
++ [x] `Review().save()` works correctly.
++ [x] `Review().to_dict()` works correctly.
 

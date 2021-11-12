@@ -362,7 +362,7 @@ class HBNBCommand(cmd.Cmd):
             args (tuple): The class action's arguments.
         """
         errors = HBNBCommand.error_messages
-        ignored_attrs = ('id', 'created_at', 'updated_at')
+        ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
         obj_id = args[0] if len(args) >= 1 else None
         obj = None
         if class_name is None:

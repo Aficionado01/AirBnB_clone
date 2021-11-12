@@ -95,18 +95,9 @@ class TestBaseModel(unittest.TestCase):
         self.assertIn("'id': '012345'", bm_str)
         self.assertIn("'created_at': " + datetime_now_repr, bm_str)
         self.assertIn("'updated_at': " + datetime_now_repr, bm_str)
-        self.assertIn(
-            "'id': ",
-            str(BaseModel())
-        )
-        self.assertIn(
-            "'created_at': ",
-            str(BaseModel())
-        )
-        self.assertIn(
-            "'updated_at': ",
-            str(BaseModel())
-        )
+        self.assertIn("'id': ", str(BaseModel()))
+        self.assertIn("'created_at': ", str(BaseModel()))
+        self.assertIn("'updated_at': ", str(BaseModel()))
         self.assertIn(
             "'gender': ",
             str(BaseModel(gender='female', id='m-77'))

@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 import unittest
 from io import StringIO
+from unittest.loader import getTestCaseNames
 from unittest.mock import patch
 
 from console import HBNBCommand, storage
@@ -1083,5 +1084,145 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertNotIn('State.{}'.format(a.id), storage.all().keys())
             self.assertIn('State.{}'.format(b.id), storage.all().keys())
 
-    # def test_cls_update(self):
-    #     pass
+    def test_cls_update(self):
+        """Tests the update class action of the HBNBCommand class.
+        """
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('City.update()')
+            self.assertEqual(istdout.getvalue(), "** instance id missing **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('Review.update("ytq")')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('State.update("gggh", "name", "California")')
+            self.assertEqual(istdout.getvalue(), "** no instance found **\n")
+        mdl_s = City()
+        mdl_s.save()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('City.update("{}")'.format(mdl_s.id))
+            self.assertEqual(
+                istdout.getvalue(),
+                "** attribute name missing **\n"
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(mdl_s.name, '')
+            HBNBCommand().precmd('City.update("{}", "name")'.format(mdl_s.id))
+            self.assertEqual(istdout.getvalue(), "** value missing **\n")
+            self.assertEqual(mdl_s.name, '')
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(mdl_s.name, '')
+            if os.path.isfile('file.json'):
+                os.unlink('file.json')
+            self.assertFalse(os.path.isfile('file.json'))
+            HBNBCommand().precmd(
+                'City.update("{}", "name", "Paris")'.format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertTrue(os.path.isfile('file.json'))
+            self.assertEqual(mdl_s.name, 'Paris')
+        # only one attribute can be updated in a single command line
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertNotEqual(mdl_s.name, 'Madrid')
+            self.assertFalse(hasattr(mdl_s, 'nm'))
+            self.assertFalse(hasattr(mdl_s, 'population'))
+            HBNBCommand().precmd(
+                'City.update("{}", "nm", "Madrid", "population", 345)'
+                .format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertTrue(hasattr(mdl_s, 'nm'))
+            self.assertFalse(hasattr(mdl_s, 'population'))
+            self.assertEqual(getattr(mdl_s, 'nm'), 'Madrid')
+        # id, created_at, and updated_at can't be updated
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertNotEqual(mdl_s.id, 'c-589')
+            HBNBCommand().precmd(
+                'City.update("{}", "id", "c-589")'.format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.id, 'c-589')
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            time_s = datetime(2003, 5, 15)
+            self.assertNotEqual(mdl_s.created_at, time_s)
+            HBNBCommand().precmd(
+                'City.update("{}", "created_at", "{}")'.format(
+                    mdl_s.id, time_s.isoformat()
+                    )
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.created_at, time_s)
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            time_s = datetime(2003, 5, 15)
+            self.assertNotEqual(mdl_s.updated_at, time_s)
+            HBNBCommand().precmd(
+                'City.update("{}", "updated_at", "{}")'.format(
+                    mdl_s.id, time_s.isoformat()
+                    )
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.updated_at, time_s)
+        # region Using a dictionary representation
+        mdl_s = User()
+        mdl_s.save()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            if os.path.isfile('file.json'):
+                os.unlink('file.json')
+            self.assertFalse(os.path.isfile('file.json'))
+            self.assertFalse(hasattr(mdl_s, 'age'))
+            HBNBCommand().precmd(
+                'User.update("{}", {{\'age\': 5}}, "Paris")'.format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertTrue(os.path.isfile('file.json'))
+            self.assertTrue(hasattr(mdl_s, 'age'))
+            self.assertEqual(getattr(mdl_s, 'age'), 5)
+            self.assertFalse(hasattr(mdl_s, "{'age': 5}"))
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertFalse(hasattr(mdl_s, 'j'))
+            self.assertFalse(hasattr(mdl_s, 'IQ'))
+            HBNBCommand().precmd(
+                'User.update("{}", {{\'j\': 3}}, "IQ", "50")'.format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertFalse(hasattr(mdl_s, 'IQ'))
+            self.assertTrue(hasattr(mdl_s, 'j'))
+            self.assertEqual(getattr(mdl_s, 'j'), 3)
+        # id, __class__ created_at, and updated_at can't be updated
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertEqual(mdl_s.to_dict()['__class__'], 'User')
+            HBNBCommand().precmd(
+                'User.update("{}", {{\'__class__\': "rt"}})'.format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), '')
+            self.assertEqual(mdl_s.to_dict()['__class__'], 'User')
+            self.assertNotEqual(mdl_s.to_dict()['__class__'], 'rt')
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            self.assertNotEqual(mdl_s.id, 'c-589')
+            HBNBCommand().precmd(
+                'User.update("{}", {{"id": "c-589"}})'.format(mdl_s.id)
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.id, 'c-589')
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            time_s = datetime(2003, 5, 15)
+            self.assertNotEqual(mdl_s.created_at, time_s)
+            HBNBCommand().precmd(
+                'User.update("{}", {{"created_at": "{}"}})'.format(
+                    mdl_s.id, time_s.isoformat()
+                    )
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.created_at, time_s)
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            time_s = datetime(2003, 5, 15)
+            self.assertNotEqual(mdl_s.updated_at, time_s)
+            HBNBCommand().precmd(
+                'User.update("{}", {{"updated_at": "{}"}})'.format(
+                    mdl_s.id, time_s.isoformat()
+                    )
+            )
+            self.assertEqual(istdout.getvalue(), "")
+            self.assertNotEqual(mdl_s.updated_at, time_s)
+        # endregion
