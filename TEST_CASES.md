@@ -35,10 +35,10 @@ This is a listing of the test cases to cover in the unittets of this project.
 + [x] The prompt should be `(hbnb)`.
 + [x] Running an empty line (composed of whitespaces) does nothing (does not print the output of the last command).
 + [x] Running `EOF` or `quit` causes the console to exit with a status code of 0.
-+ [ ] Running `help` prints a help menu.
-+ [ ] Running `help quit` prints a help message about `quit`.
-+ [ ] Running `help quit 25` prints a help message about `quit`.
-+ [ ] Running `help 25` prints a command not found error message.
++ [x] Running `help` prints a help menu.
++ [x] Running `help quit` prints a help message about `quit`.
++ [x] Running `help quit 25` prints a help message about `quit`.
++ [x] Running `help 25` prints a no help found error message.
 
 #### _create_ Command
 
@@ -118,7 +118,6 @@ This is a listing of the test cases to cover in the unittets of this project.
 + [ ] Running `User.all(` throws the invalid syntax error message from the `cmd.CMD` class.
 + [ ] Running `User.all)` throws the invalid syntax error message from the `cmd.CMD` class.
 + [ ] Running `User.all(")` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.all(9.)` throws the invalid syntax error message from the `cmd.CMD` class.
 + [ ] Running `User.all(1 23)` throws the invalid syntax error message from the `cmd.CMD` class.
 + [ ] Running `User.foo()` throws the invalid syntax error message from the `cmd.CMD` class.
 + [ ] Running `.foo()` throws the invalid syntax error message from the `cmd.CMD` class.
