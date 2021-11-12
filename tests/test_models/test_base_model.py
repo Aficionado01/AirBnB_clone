@@ -3,9 +3,6 @@
 """
 import unittest
 from datetime import datetime
-import re
-import os
-import time
 
 from models.base_model import BaseModel
 from tests import remove_files
@@ -16,11 +13,11 @@ class TestBaseModel(unittest.TestCase):
     """
 
     def test_init(self):
-        """Tests the initialization of the Base class.
+        """Tests the initialization of the BaseModel class.
         """
         self.assertTrue(hasattr(BaseModel(), 'id'))
+        self.assertTrue(hasattr(BaseModel(), 'id'))
         self.assertTrue(hasattr(BaseModel(), 'created_at'))
-        self.assertTrue(hasattr(BaseModel(), 'updated_at'))
         self.assertTrue(hasattr(BaseModel(), 'updated_at'))
         self.assertIsInstance(BaseModel().id, str)
         self.assertIsInstance(BaseModel().created_at, datetime)
@@ -115,6 +112,11 @@ class TestBaseModel(unittest.TestCase):
             '__class__': 'BaseModel'
         }).updated_at, datetime(2021, 11, 10, 12, 50, 6, 589242))
         self.assertNotEqual(BaseModel().id, BaseModel().id)
+
+    def test_str(self):
+        """Tests the __str__ function of the BaseModel class.
+        """
+        pass
 
     def test_save(self):
         """Tests the save function of the BaseModel class.

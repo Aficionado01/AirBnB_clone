@@ -7,8 +7,8 @@ import unittest
 from io import StringIO
 from unittest.mock import patch
 
-from console import HBNBCommand
-from tests import remove_files
+from console import HBNBCommand, storage
+from tests import remove_files, write_text_file
 
 
 class TestHBNBCommand(unittest.TestCase):
@@ -124,7 +124,11 @@ class TestHBNBCommand(unittest.TestCase):
     def test_do_create(self):
         """Tests the do_create function of the HBNBCommand class.
         """
-        remove_files()
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create')
+            self.assertEqual(istdout.getvalue(), "** class name missing **\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().onecmd('create 78')
             self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
@@ -132,12 +136,67 @@ class TestHBNBCommand(unittest.TestCase):
             HBNBCommand().onecmd('create 78 User')
             self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create BaseModel')
+            self.assertTrue(os.path.isfile('file.json'))
+            self.assertTrue(os.stat('file.json').st_size > 20)
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create City 25')
+            self.assertTrue(os.path.isfile('file.json'))
+            self.assertTrue(os.stat('file.json').st_size > 20)
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create "Place"')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n'
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create BaseModel')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n'
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create User')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n'
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create State')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n'
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create City')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n'
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create Amenity')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n'
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().onecmd('create Place')
-            self.assertRegex(istdout.getvalue(), r'[0-9a-zA-Z]+(-[0-9a-zA-Z]+)*\n')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n'
+            )
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('create Review')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n'
+            )
 
     def test_do_all(self):
         """Tests the do_all function of the HBNBCommand class.
         """
+        write_text_file('file.json', '{}')
+        storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().onecmd('all 78')
             self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
@@ -145,7 +204,25 @@ class TestHBNBCommand(unittest.TestCase):
             HBNBCommand().onecmd('all 78 User')
             self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('all BaseModel')
+            self.assertEqual(istdout.getvalue(), "[]\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('all User')
+            self.assertEqual(istdout.getvalue(), "[]\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('all State')
+            self.assertEqual(istdout.getvalue(), "[]\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('all City')
+            self.assertEqual(istdout.getvalue(), "[]\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('all Amenity')
+            self.assertEqual(istdout.getvalue(), "[]\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().onecmd('all Place')
+            self.assertEqual(istdout.getvalue(), "[]\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().onecmd('all Review')
             self.assertEqual(istdout.getvalue(), "[]\n")
 
     def test_class_action(self):
@@ -169,12 +246,15 @@ class TestHBNBCommand(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.all(")')
             self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.all(\")\n")
-        # with patch('sys.stdout', new=StringIO()) as istdout:
-        #     HBNBCommand().precmd('User.all(1 23)')
-        #     self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.all(1 23)\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.all(1 23)')
+            self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.all(1 23)\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('User.foo()')
             self.assertEqual(istdout.getvalue(), "*** Unknown syntax: User.foo()\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('ghy.foo()')
+            self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('.all()')
             self.assertEqual(istdout.getvalue(), "*** Unknown syntax: .all()\n")
@@ -193,3 +273,112 @@ class TestHBNBCommand(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as istdout:
             HBNBCommand().precmd('foo.all()')
             self.assertEqual(istdout.getvalue(), "** class doesn't exist **\n")
+
+    def test_cls_count(self):
+        """Tests the count class action of the HBNBCommand class.
+        """
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.count("49faff9a-6318-451f-87b6")')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.count(None)')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.count(None)')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('User.count()')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('BaseModel.count()')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('State.count()')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('City.count()')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('Amenity.count()')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('Place.count()')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('Review.count()')
+            self.assertEqual(istdout.getvalue(), "0\n")
+        # creating objects and counting them
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('create BaseModel')
+            HBNBCommand().precmd('create BaseModel')
+            HBNBCommand().precmd('BaseModel.count()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('create User')
+            HBNBCommand().precmd('create User')
+            HBNBCommand().precmd('User.count()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
+            )
+        remove_files()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('create State')
+            HBNBCommand().precmd('create State')
+            HBNBCommand().precmd('State.count()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('create City')
+            HBNBCommand().precmd('create City')
+            HBNBCommand().precmd('City.count()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('create Amenity')
+            HBNBCommand().precmd('create Amenity')
+            HBNBCommand().precmd('Amenity.count()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('create Place')
+            HBNBCommand().precmd('create Place')
+            HBNBCommand().precmd('Place.count()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){2}2\n'
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()
+        with patch('sys.stdout', new=StringIO()) as istdout:
+            HBNBCommand().precmd('create Review')
+            HBNBCommand().precmd('create Review')
+            HBNBCommand().precmd('create Review')
+            HBNBCommand().precmd('Review.count()')
+            self.assertRegex(
+                istdout.getvalue(),
+                r'(?:[0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\n){3}3\n'
+            )
+        write_text_file('file.json', '{}')
+        storage.reload()

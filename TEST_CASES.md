@@ -42,22 +42,22 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### _create_ Command
 
-+ [ ] Running `create` prints a missing class name error message.
-+ [ ] Running `create 25` prints a non-existing class name error message.
-+ [ ] Running `create 25 User` prints a non-existing class name error message.
-+ [ ] Running `create User` creates a new User.
-+ [ ] Running `create "User"` creates a new User.
-+ [ ] Running `create User 25` creates a new User.
-+ [ ] The `update` class action always commits its changes and prints the id of the newly created model object to `stdout` upon a successful execution.
++ [x] Running `create` prints a missing class name error message.
++ [x] Running `create 25` prints a non-existing class name error message.
++ [x] Running `create 25 User` prints a non-existing class name error message.
++ [x] Running `create User` creates a new User.
++ [x] Running `create "User"` creates a new User.
++ [x] Running `create User 25` creates a new User.
++ [x] The `create` class action always commits its changes and prints the id of the newly created model object to `stdout` upon a successful execution.
 
 #### _all_ Command
 
 + [ ] Running `all` prints a list consisting of the string representation of all BaseModel instances.
-+ [ ] Running `all 25` prints a non-existing class name error message.
-+ [ ] Running `all 25 User` prints a non-existing class name error message.
-+ [ ] Running `all User` prints a list consisting of the string representation of all User instances.
-+ [ ] Running `all "User"` prints a list consisting of the string representation of all BaseModel instances.
-+ [ ] Running `all User 25` prints a list consisting of the string representation of all BaseModel instances.
++ [x] Running `all 25` prints a non-existing class name error message.
++ [x] Running `all 25 User` prints a non-existing class name error message.
++ [x] Running `all User` prints a list consisting of the string representation of all `User` instances.
++ [x] Running `all "User"` prints a list consisting of the string representation of all `BaseModel` instances.
++ [x] Running `all User 25` prints a list consisting of the string representation of all `User` instances.
 
 #### _show_ Command
 
@@ -112,19 +112,19 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### General Class Actions
 
-+ [ ] Running `foo.a` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.a` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.all` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.all(` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.all)` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.all(")` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.all(1 23)` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.foo()` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `.foo()` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.()` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User()` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `User.show "49faff9a-6318-451f-87b6-910505c55907"` throws the invalid syntax error message from the `cmd.CMD` class.
-+ [ ] Running `foo.all()` throws the class doesn't exist error message.
++ [x] Running `foo.a` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.a` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.all` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.all(` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.all)` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.all(")` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.all(1 23)` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.foo()` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `.foo()` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.()` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User()` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `User.show "49faff9a-6318-451f-87b6-910505c55907"` throws the invalid syntax error message from the `cmd.CMD` class.
++ [x] Running `foo.all()` throws the class doesn't exist error message.
 
 #### _all_ Class Action
 
@@ -135,10 +135,10 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 #### _count_ Class Action
 
-+ [ ] Running `User.count()` prints the number of all `User` objects.
-+ [ ] Running `User.count("49faff9a-6318-451f-87b6-910505c55907")` prints the number of all `User` objects.
-+ [ ] Running `User.count(None)` prints the number of all `User` objects.
-+ [ ] Running `User.count(12, '34')` prints the number of all `User` objects.
++ [x] Running `User.count()` prints the number of all `User` objects.
++ [x] Running `User.count("49faff9a-6318-451f-87b6-910505c55907")` prints the number of all `User` objects.
++ [x] Running `User.count(None)` prints the number of all `User` objects.
++ [x] Running `User.count(12, '34')` prints the number of all `User` objects.
 
 
 #### _show_ Class Action
@@ -176,48 +176,49 @@ This is a listing of the test cases to cover in the unittets of this project.
 
 ### User
 
-+ [ ] `User` is an instance of `BaseModel`.
-+ [ ] `User` contains the public class attributes: `email` (str), `password` (str), `first_name` (str), and `last_name` (str).
++ [x] `User` is an instance of `BaseModel`.
++ [x] `User` contains the public class attributes: `email` (str), `password` (str), `first_name` (str), and `last_name` (str).
 + [ ] `str(User())` works correctly.
 + [ ] `User().save()` works correctly.
 + [ ] `User().to_dict()` works correctly.
 
 ### State
 
-+ [ ] `State` is an instance of `BaseModel`.
-+ [ ] `State` contains the public class attribute `name` (str).
++ [x] `State` is an instance of `BaseModel`.
++ [x] `State` contains the public class attribute `name` (str).
 + [ ] `str(State())` works correctly.
 + [ ] `State().save()` works correctly.
 + [ ] `State().to_dict()` works correctly.
 
 ### City
 
-+ [ ] `City` is an instance of `BaseModel`.
-+ [ ] `City` contains the public class attributes: `state_id` (str) and `name` (str).
++ [x] `City` is an instance of `BaseModel`.
++ [x] `City` contains the public class attributes: `state_id` (str) and `name` (str).
 + [ ] `str(City())` works correctly.
 + [ ] `City().save()` works correctly.
 + [ ] `City().to_dict()` works correctly.
 
 ### Amenity
 
-+ [ ] `Amenity` is an instance of `BaseModel`.
-+ [ ] `Amenity` contains the public class attribute `name` (str).
++ [x] `Amenity` is an instance of `BaseModel`.
++ [x] `Amenity` contains the public class attribute `name` (str).
 + [ ] `str(Amenity())` works correctly.
 + [ ] `Amenity().save()` works correctly.
 + [ ] `Amenity().to_dict()` works correctly.
 
 ### Place
 
-+ [ ] `Place` is an instance of `BaseModel`.
-+ [ ] `Place` contains the public class attributes: `city_id` (str), `user_id` (str), `name` (str), `description` (str), `number_rooms` (int), `number_bathrooms` (int), `max_guest` (int), `price_by_night` (int), `latitude` (float), `longitude` (float), and `amenity_ids` (str).
++ [x] `Place` is an instance of `BaseModel`.
++ [x] `Place` contains the public class attributes: `city_id` (str), `user_id` (str), `name` (str), `description` (str), `number_rooms` (int), `number_bathrooms` (int), `max_guest` (int), `price_by_night` (int), `latitude` (float), `longitude` (float), and `amenity_ids` (list).
 + [ ] `str(Place())` works correctly.
 + [ ] `Place().save()` works correctly.
 + [ ] `Place().to_dict()` works correctly.
 
 ### Review
 
-+ [ ] `Review` is an instance of `BaseModel`.
-+ [ ] `Review` contains the public class attributes: `place_id` (str), `user_id` (str), and `text` (str).
++ [x] `Review` is an instance of `BaseModel`.
++ [x] `Review` contains the public class attributes: `place_id` (str), `user_id` (str), and `text` (str).
 + [ ] `str(Review())` works correctly.
 + [ ] `Review().save()` works correctly.
 + [ ] `Review().to_dict()` works correctly.
+

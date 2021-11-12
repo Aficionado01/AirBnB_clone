@@ -18,5 +18,7 @@ class TestState(unittest.TestCase):
         self.assertIsInstance(State(), BaseModel)
         self.assertTrue(hasattr(State, 'name'))
         self.assertIsInstance(State.name, str)
+        self.assertEqual(State().name, '')
+        self.assertEqual(State('Kansas').name, '')
         self.assertEqual(State(name='California').name, 'California')
         self.assertEqual(State('Texas', name='Lagos').name, 'Lagos')
