@@ -17,6 +17,9 @@ class TestBaseModel(unittest.TestCase):
     def test_init(self):
         """Tests the initialization of the BaseModel class.
         """
+        self.assertFalse(hasattr(BaseModel, 'id'))
+        self.assertFalse(hasattr(BaseModel, 'created_at'))
+        self.assertFalse(hasattr(BaseModel, 'updated_at'))
         self.assertTrue(hasattr(BaseModel(), 'id'))
         self.assertTrue(hasattr(BaseModel(), 'created_at'))
         self.assertTrue(hasattr(BaseModel(), 'updated_at'))
@@ -59,6 +62,25 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(bm.id, '012')
         self.assertEqual(bm.created_at, datetime_now)
         self.assertEqual(bm.updated_at, datetime_now)
+        self.assertEqual(BaseModel(id=45).id, 45)
+        self.assertEqual(BaseModel(id=None).id, None)
+        self.assertNotEqual(BaseModel('cc5f').id, 'cc5f')
+        self.assertNotEqual(BaseModel('cc5f').created_at, 'cc5f')
+        self.assertNotEqual(BaseModel('cc5f').updated_at, 'cc5f')
+        self.assertTrue(hasattr(BaseModel(foo=45), 'foo'))
+        self.assertFalse(hasattr(BaseModel(foo=45), 'id'))
+        self.assertFalse(hasattr(BaseModel(foo=45), 'created_at'))
+        self.assertFalse(hasattr(BaseModel(foo=45), 'updated_at'))
+        self.assertNotEqual(BaseModel(__class__='45').__class__, '45')
+        self.assertNotEqual(BaseModel(__class__=None).__class__, None)
+        with self.assertRaises(TypeError):
+            BaseModel(**{'created_at': 45})
+        with self.assertRaises(TypeError):
+            BaseModel(**{'created_at': datetime.now()})
+        with self.assertRaises(TypeError):
+            BaseModel(**{'updated_at': 45})
+        with self.assertRaises(TypeError):
+            BaseModel(**{'updated_at': datetime.now()})
 
     def test_str(self):
         """Tests the __str__ function of the BaseModel class.
@@ -68,11 +90,53 @@ class TestBaseModel(unittest.TestCase):
         bm = BaseModel()
         bm.id = '012345'
         bm.created_at = bm.updated_at = datetime_now
-        bm_str = bm.__str__()
+        bm_str = str(bm)
         self.assertIn("[BaseModel] (012345)", bm_str)
         self.assertIn("'id': '012345'", bm_str)
         self.assertIn("'created_at': " + datetime_now_repr, bm_str)
         self.assertIn("'updated_at': " + datetime_now_repr, bm_str)
+        self.assertIn(
+            "'id': ",
+            str(BaseModel())
+        )
+        self.assertIn(
+            "'created_at': ",
+            str(BaseModel())
+        )
+        self.assertIn(
+            "'updated_at': ",
+            str(BaseModel())
+        )
+        self.assertIn(
+            "'gender': ",
+            str(BaseModel(gender='female', id='m-77'))
+        )
+        self.assertNotIn(
+            "'created_at': ",
+            str(BaseModel(gender='female', id='u-88'))
+        )
+        self.assertNotIn(
+            "'updated_at': ",
+            str(BaseModel(gender='female', id='u-55'))
+        )
+        self.assertRegex(
+            str(BaseModel()),
+            r'\[BaseModel\] \([0-9a-zA-Z]+(?:-[0-9a-zA-Z]+)*\) \{.+\}'
+        )
+        self.assertEqual(
+            str(BaseModel(id='m-345')),
+            "[BaseModel] (m-345) {'id': 'm-345'}"
+        )
+        self.assertEqual(
+            str(BaseModel(id=45)),
+            "[BaseModel] (45) {'id': 45}"
+        )
+        self.assertEqual(
+            str(BaseModel(id=None)),
+            "[BaseModel] (None) {'id': None}"
+        )
+        with self.assertRaises(AttributeError):
+            str(BaseModel(gender='female'))
 
     def test_save(self):
         """Tests the save function of the BaseModel class.
