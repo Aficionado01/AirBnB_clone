@@ -31,7 +31,7 @@ class FileStorage:
         Returns:
             dict: The stored objects.
         """
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """Stores a new object.
@@ -40,23 +40,23 @@ class FileStorage:
             obj (BaseModel): The object to store.
         """
         obj_key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-        FileStorage.__objects[obj_key] = obj
+        self.__objects[obj_key] = obj
 
     def save(self):
         """Serializes the objects to a JSON file.
         """
-        with open(FileStorage.__file_path, mode='w') as file:
+        with open(self.__file_path, mode='w') as file:
             json_objs = {}
-            for key, value in FileStorage.__objects.items():
+            for key, value in self.__objects.items():
                 json_objs[key] = value.to_dict()
             file.write(JSONEncoder().encode(json_objs))
 
     def reload(self):
         """Deserializes the JSON file to objects if it exists.
         """
-        if os.path.isfile(FileStorage.__file_path):
+        if os.path.isfile(self.__file_path):
             file_lines = []
-            with open(FileStorage.__file_path, mode='r') as file:
+            with open(self.__file_path, mode='r') as file:
                 file_lines = file.readlines()
             file_txt = ''.join(file_lines) if len(file_lines) > 0 else '{}'
             json_objs = JSONDecoder().decode(file_txt)
@@ -66,4 +66,4 @@ class FileStorage:
                 cls_name = value['__class__']
                 if cls_name in classes.keys():
                     base_model_objs[key] = classes[cls_name](**value)
-            FileStorage.__objects = base_model_objs
+            self.__objects = base_model_objs
