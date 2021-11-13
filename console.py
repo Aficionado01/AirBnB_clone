@@ -19,7 +19,7 @@ class HBNBCommand(cmd.Cmd):
         if (not self.stdin.closed) and (self.stdin.isatty()):
             self.prompt = '(hbnb) '
         else:
-            self.prompt = ''
+            self.prompt = '(hbnb) \n'
 
     @staticmethod
     def split_args(line):
@@ -41,19 +41,6 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     args_list.append(match)
         return args_list
-
-    def preloop(self) -> None:
-        """Executes the preloop routine.
-        """
-        if (self.stdin.closed) or (not self.stdin.isatty()):
-            print('(hbnb) ')
-
-    def postcmd(self, stop: bool, line: str) -> bool:
-        """The postcmd routine.
-        """
-        if (self.stdin.closed) or (not self.stdin.isatty()):
-            print('(hbnb)')
-        return stop
 
     def precmd(self, line):
         """Runs some actions before a line of command is executed.
@@ -83,11 +70,11 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return ''
             if fxn_name not in dir(self):
-                super().onecmd(line)
-                return ''
+                # super().onecmd(line)
+                return line
             if not isinstance(fxn, type(self.precmd)):
-                super().onecmd(line)
-                return ''
+                # super().onecmd(line)
+                return line
             try:
                 if len(args_txt) == 0:
                     args = tuple()
@@ -97,11 +84,11 @@ class HBNBCommand(cmd.Cmd):
                 fxn(class_name, *args)
                 return ''
             except Exception:
-                super().onecmd(line)
-                return ''
+                # super().onecmd(line)
+                return line
         else:
-            super().onecmd(line)
-            return ''
+            # super().onecmd(line)
+            return line
 
     def do_EOF(self, line):
         """Exits this application.
