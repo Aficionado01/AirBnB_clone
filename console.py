@@ -2,64 +2,24 @@
 """A module for managing the AirBnB clone's command interpreter.
 """
 import cmd
-import enum
 import re
 import sys
 
 from models import storage
 
 
-class ErrorTypes(enum.IntEnum):
-    """The types of command errors in this command interpreter.
-    """
-    Class_Name_Missing = 0
-    Class_Not_Existing = 1
-    Instance_Id_Missing = 2
-    Instance_Not_Existing = 3
-    Attribute_Name_Missing = 4
-    Attribute_Value_Missing = 5
-
-
 class HBNBCommand(cmd.Cmd):
     """Represents the command interpreter for the AirBnB clone.
     """
-    error_messages = (
-        "** class name missing **",
-        "** class doesn't exist **",
-        "** instance id missing **",
-        "** no instance found **",
-        "** attribute name missing **",
-        "** value missing **"
-    )
 
     def __init__(self):
         """Initializes the AirBnB clone command interpreter.
         """
         super().__init__()
-        if sys.stdin.isatty():
+        if (not sys.__stdin__.closed) and (sys.__stdin__.isatty()):
             self.prompt = '(hbnb) '
         else:
-            self.prompt = ''
-
-    def preloop(self):
-        """Performs some routines before each loop.
-        """
-        if not sys.stdin.isatty():
-            print('(hbnb)')
-
-    def postcmd(self, stop: bool, line: str):
-        """Performs some routines after each command execution.
-
-        Args:
-            stop (bool): Specifies whether the REPL should be stopped.
-            line (str): The value of the current command line.
-
-        Returns:
-            bool: Specifies whether the REPL should be stopped.
-        """
-        if not sys.stdin.isatty():
-            print('(hbnb) ', end='')
-        return stop
+            self.prompt = '(hbnb) \n'
 
     @staticmethod
     def split_args(line):
@@ -90,7 +50,6 @@ class HBNBCommand(cmd.Cmd):
         Returns:
             str: The next line of command to execute.
         """
-        errors = HBNBCommand.error_messages
         patterns = (
             r'(?P<class>[a-zA-Z]+)',
             r'(?P<action>[a-zA-Z]+)',
@@ -108,7 +67,7 @@ class HBNBCommand(cmd.Cmd):
             args_txt = cls_fxn_match.group('args_txt').strip()
             args = None
             if class_name not in storage.model_classes.keys():
-                print(errors[ErrorTypes.Class_Not_Existing])
+                print("** class doesn't exist **")
                 return ''
             if fxn_name not in dir(self):
                 super().onecmd(line)
@@ -155,14 +114,13 @@ class HBNBCommand(cmd.Cmd):
         and prints the id.
         Usage: create <class name>
         """
-        errors = HBNBCommand.error_messages
         args = HBNBCommand.split_args(line)
         class_name = args[0] if len(args) >= 1 else None
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name not in storage.model_classes.keys():
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
             return
         new_obj = storage.model_classes[class_name]()
         new_obj.save()
@@ -173,44 +131,42 @@ class HBNBCommand(cmd.Cmd):
         on the class name and id
         Usage: show <class name> <id>
         """
-        errors = HBNBCommand.error_messages
         args = HBNBCommand.split_args(line)
         class_name = args[0] if len(args) >= 1 else None
         obj_id = args[1] if len(args) >= 2 else None
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name not in storage.model_classes.keys():
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
             return
         if obj_id is None:
-            print(errors[ErrorTypes.Instance_Id_Missing])
+            print("** instance id missing **")
             return
         for obj in storage.all().values():
             if isinstance(obj, storage.model_classes[class_name]):
                 if obj.id == obj_id:
                     print(obj)
                     return
-        print(errors[ErrorTypes.Instance_Not_Existing])
+        print("** no instance found **")
 
     def do_destroy(self, line):
         """Deletes an instance based on the class name and
         id and commits the changes.
         Usage: destroy <class name> <id>
         """
-        errors = HBNBCommand.error_messages
         args = HBNBCommand.split_args(line)
         class_name = args[0] if len(args) >= 1 else None
         obj_id = args[1] if len(args) >= 2 else None
         obj_store_id = None
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name not in storage.model_classes.keys():
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
             return
         if obj_id is None:
-            print(errors[ErrorTypes.Instance_Id_Missing])
+            print("** instance id missing **")
             return
         for id, obj in storage.all().items():
             if isinstance(obj, storage.model_classes[class_name]):
@@ -218,7 +174,7 @@ class HBNBCommand(cmd.Cmd):
                     obj_store_id = id
                     break
         if obj_store_id is None:
-            print(errors[ErrorTypes.Instance_Not_Existing])
+            print("** no instance found **")
         else:
             storage.all().pop(obj_store_id)
             storage.save()
@@ -230,7 +186,6 @@ class HBNBCommand(cmd.Cmd):
             <class_name> - One of the values in the set {BaseModel, User}.
                 Default: BaseModel.
         """
-        errors = HBNBCommand.error_messages
         args = HBNBCommand.split_args(line)
         class_name = args[0] if len(args) >= 1 else 'BaseModel'
         if class_name in storage.model_classes.keys():
@@ -240,14 +195,13 @@ class HBNBCommand(cmd.Cmd):
                     all_class_objs.append(str(obj))
             print(all_class_objs)
         else:
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
 
     def do_update(self, line):
         """Updates an instance based on the class name and id by
         adding or updating an attribute and commits the changes.
         Usage: update <class name> <id> <attribute_name> <attribute_value>
         """
-        errors = HBNBCommand.error_messages
         args = HBNBCommand.split_args(line)
         ignored_attrs = ('id', 'created_at', 'updated_at')
         class_name = args[0] if len(args) >= 1 else None
@@ -256,13 +210,13 @@ class HBNBCommand(cmd.Cmd):
         attr_value = args[3] if len(args) >= 4 else None
         obj = None
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name not in storage.model_classes.keys():
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
             return
         if obj_id is None:
-            print(errors[ErrorTypes.Instance_Id_Missing])
+            print("** instance id missing **")
             return
         for store_obj in storage.all().values():
             if isinstance(store_obj, storage.model_classes[class_name]):
@@ -270,13 +224,13 @@ class HBNBCommand(cmd.Cmd):
                     obj = store_obj
                     break
         if obj is None:
-            print(errors[ErrorTypes.Instance_Not_Existing])
+            print("** no instance found **")
             return
         if attr_name is None:
-            print(errors[ErrorTypes.Attribute_Name_Missing])
+            print("** attribute name missing **")
             return
         if attr_value is None:
-            print(errors[ErrorTypes.Attribute_Value_Missing])
+            print("** value missing **")
             return
         if attr_name not in ignored_attrs:
             val = type(getattr(obj, attr_name, ''))(attr_value)
@@ -290,9 +244,8 @@ class HBNBCommand(cmd.Cmd):
             class_name (str): The name of the class.
             args (tuple): The class action's arguments.
         """
-        errors = HBNBCommand.error_messages
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name in storage.model_classes.keys():
             all_class_objs = []
@@ -301,7 +254,7 @@ class HBNBCommand(cmd.Cmd):
                     all_class_objs.append(str(obj))
             print('[{}]'.format(', '.join(all_class_objs)))
         else:
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
 
     def cls_count(self, class_name, *args):
         """Retrieves the number of instances of a class.
@@ -310,9 +263,9 @@ class HBNBCommand(cmd.Cmd):
             class_name (str): The name of the class.
             args (tuple): The class action's arguments.
         """
-        errors = HBNBCommand.error_messages
+
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name in storage.model_classes.keys():
             n = 0
@@ -321,7 +274,7 @@ class HBNBCommand(cmd.Cmd):
                     n += 1
             print(n)
         else:
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
 
     def cls_show(self, class_name, *args):
         """Retrieves an instances of a class based on its id.
@@ -330,23 +283,23 @@ class HBNBCommand(cmd.Cmd):
             class_name (str): The name of the class.
             args (tuple): The class action's arguments.
         """
-        errors = HBNBCommand.error_messages
+
         obj_id = args[0] if len(args) >= 1 else None
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name not in storage.model_classes.keys():
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
             return
         if obj_id is None:
-            print(errors[ErrorTypes.Instance_Id_Missing])
+            print("** instance id missing **")
             return
         for obj in storage.all().values():
             if isinstance(obj, storage.model_classes[class_name]):
                 if obj.id == obj_id:
                     print(obj)
                     return
-        print(errors[ErrorTypes.Instance_Not_Existing])
+        print("** no instance found **")
 
     def cls_destroy(self, class_name, *args):
         """Destroys an instances of a class based on its id.
@@ -355,17 +308,17 @@ class HBNBCommand(cmd.Cmd):
             class_name (str): The name of the class.
             args (tuple): The class action's arguments.
         """
-        errors = HBNBCommand.error_messages
+
         obj_id = args[0] if len(args) >= 1 else None
         obj_store_id = None
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name not in storage.model_classes.keys():
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
             return
         if obj_id is None:
-            print(errors[ErrorTypes.Instance_Id_Missing])
+            print("** instance id missing **")
             return
         for id, obj in storage.all().items():
             if isinstance(obj, storage.model_classes[class_name]):
@@ -373,7 +326,7 @@ class HBNBCommand(cmd.Cmd):
                     obj_store_id = id
                     break
         if obj_store_id is None:
-            print(errors[ErrorTypes.Instance_Not_Existing])
+            print("** no instance found **")
         else:
             storage.all().pop(obj_store_id)
             storage.save()
@@ -386,18 +339,17 @@ class HBNBCommand(cmd.Cmd):
             class_name (str): The name of the class.
             args (tuple): The class action's arguments.
         """
-        errors = HBNBCommand.error_messages
         ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
         obj_id = args[0] if len(args) >= 1 else None
         obj = None
         if class_name is None:
-            print(errors[ErrorTypes.Class_Name_Missing])
+            print("** class name missing **")
             return
         if class_name not in storage.model_classes.keys():
-            print(errors[ErrorTypes.Class_Not_Existing])
+            print("** class doesn't exist **")
             return
         if obj_id is None:
-            print(errors[ErrorTypes.Instance_Id_Missing])
+            print("** instance id missing **")
             return
         for store_obj in storage.all().values():
             if isinstance(store_obj, storage.model_classes[class_name]):
@@ -405,7 +357,7 @@ class HBNBCommand(cmd.Cmd):
                     obj = store_obj
                     break
         if obj is None:
-            print(errors[ErrorTypes.Instance_Not_Existing])
+            print("** no instance found **")
             return
         if (len(args) >= 2) and (type(args[1]) is dict):
             dict_src = args[1]
@@ -417,10 +369,10 @@ class HBNBCommand(cmd.Cmd):
         attr_name = args[1] if len(args) >= 2 else None
         attr_value = args[2] if len(args) >= 3 else None
         if attr_name is None:
-            print(errors[ErrorTypes.Attribute_Name_Missing])
+            print("** attribute name missing **")
             return
         if attr_value is None:
-            print(errors[ErrorTypes.Attribute_Value_Missing])
+            print("** value missing **")
             return
         if attr_name not in ignored_attrs:
             setattr(obj, attr_name, attr_value)
