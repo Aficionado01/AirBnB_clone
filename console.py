@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """A module for managing the AirBnB clone's command interpreter.
 """
-import enum
 import cmd
+import enum
 import re
+
 from models import storage
 
 

@@ -13,6 +13,8 @@ class FileStorage:
     __objects = {}
 
     def __init__(self) -> None:
+        """Initializes a FileStorage instance.
+        """
         self.model_classes = {
             'BaseModel': import_module('models.base_model').BaseModel,
             'User': import_module('models.user').User,

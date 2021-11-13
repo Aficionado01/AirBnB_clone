@@ -11,10 +11,7 @@ jobs:
           python3 -m pip install --upgrade pip
           pip install pycodestyle
           pip install --upgrade pycodestyle
-          pip install pep8
-          pip install --upgrade pep8
       - name: Analysing the code with pycodestyle (PEP8)
         run: |
           pycodestyle `find -type f -regex '.*.py' | tr '\n' ' '`
-          pep8 `find -type f -regex '.*.py' | tr '\n' ' '`
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: echo "This job's status is ${{ job.status }}."
