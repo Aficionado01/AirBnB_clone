@@ -43,13 +43,13 @@ class HBNBCommand(cmd.Cmd):
         return args_list
 
     def do_EOF(self, line):
-        """Exits this application.
+        """The EOF command.
         Usage: EOF
         """
         exit(0)
 
     def do_quit(self, line):
-        """Exits this application.
+        """The quit command.
         Usage: quit
         """
         exit(0)
@@ -63,8 +63,7 @@ class HBNBCommand(cmd.Cmd):
         return False
 
     def do_create(self, line):
-        """Creates a new instance of BaseModel, commits the changes,
-        and prints the id.
+        """The create command.
         Usage: create <class name>
         """
         args = HBNBCommand.split_args(line)
@@ -80,8 +79,7 @@ class HBNBCommand(cmd.Cmd):
         print(new_obj.id)
 
     def do_show(self, line):
-        """Prints the string representation of an instance based
-        on the class name and id
+        """The show command.
         Usage: show <class name> <id>
         """
         args = HBNBCommand.split_args(line)
@@ -103,9 +101,36 @@ class HBNBCommand(cmd.Cmd):
                     return
         print("** no instance found **")
 
+    def do_destroy(self, line):
+        """The delete command.
+        Usage: destroy <class name> <id>
+        """
+        args = HBNBCommand.split_args(line)
+        class_name = args[0] if len(args) >= 1 else None
+        obj_id = args[1] if len(args) >= 2 else None
+        obj_store_id = None
+        if class_name is None:
+            print("** class name missing **")
+            return
+        if class_name not in storage.model_classes.keys():
+            print("** class doesn't exist **")
+            return
+        if obj_id is None:
+            print("** instance id missing **")
+            return
+        for id, obj in storage.all().items():
+            if type(obj) is storage.model_classes[class_name]:
+                if obj.id == obj_id:
+                    obj_store_id = id
+                    break
+        if obj_store_id is None:
+            print("** no instance found **")
+        else:
+            storage.all().pop(obj_store_id)
+            storage.save()
+
     def do_all(self, line):
-        """Prints the string representation of all types of the
-        given class name or any if the class name is omitted.
+        """The all command.
         Usage: all [<class_name>]
         """
         args = HBNBCommand.split_args(line)
@@ -120,6 +145,45 @@ class HBNBCommand(cmd.Cmd):
             print(all_class_objs)
         else:
             print("** class doesn't exist **")
+
+    def do_update(self, line):
+        """The Update command.
+        Usage: update <class name> <id> <attribute_name> <attribute_value>
+        """
+        args = HBNBCommand.split_args(line)
+        ignored_attrs = ('id', 'created_at', 'updated_at', '__class_')
+        class_name = args[0] if len(args) >= 1 else None
+        obj_id = args[1] if len(args) >= 2 else None
+        attr_name = args[2] if len(args) >= 3 else None
+        attr_value = args[3] if len(args) >= 4 else None
+        obj = None
+        if class_name is None:
+            print("** class name missing **")
+            return
+        if class_name not in storage.model_classes.keys():
+            print("** class doesn't exist **")
+            return
+        if obj_id is None:
+            print("** instance id missing **")
+            return
+        for store_obj in storage.all().values():
+            if type(store_obj) is storage.model_classes[class_name]:
+                if store_obj.id == obj_id:
+                    obj = store_obj
+                    break
+        if obj is None:
+            print("** no instance found **")
+            return
+        if attr_name is None:
+            print("** attribute name missing **")
+            return
+        if attr_value is None:
+            print("** value missing **")
+            return
+        if attr_name not in ignored_attrs:
+            val = type(getattr(obj, attr_name, ''))(attr_value)
+            setattr(obj, attr_name, val)
+            obj.save()
 
 
 if __name__ == '__main__':
