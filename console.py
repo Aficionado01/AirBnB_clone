@@ -12,15 +12,73 @@ from models import storage
 class HBNBCommand(cmd.Cmd):
     """Represents the command interpreter for the AirBnB clone.
     """
-    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
+
+    def __init__(self):
+        """Initializes the AirBnB clone command interpreter.
+        """
+        super().__init__()
+        if (not sys.stdin.closed) and (sys.__stdin__.isatty()):
+            self.prompt = '(hbnb) '
+        else:
+            self.prompt = ''
 
     def preloop(self):
-        """Prints the prompt when isatty is false"""
+        """Performs the preloop routine.
+        """
         if not sys.__stdin__.isatty():
             print('(hbnb)')
 
+    def precmd(self, line):
+        """Runs some actions before a line of command is executed.
+
+        Args:
+            line (str): The line of command to be executed.
+        Returns:
+            str: The next line of command to execute.
+        """
+        patterns = (
+            r'(?P<class>[a-zA-Z]+)',
+            r'(?P<action>[a-zA-Z]+)',
+            r'(?P<args_txt>.*)',
+        )
+        cls_fxn_fmt = r'{}\s*\.\s*{}\s*\({}\)'.format(
+            patterns[0], patterns[1], patterns[2]
+        )
+        cls_fxn_match = re.fullmatch(cls_fxn_fmt, line)
+        if cls_fxn_match is not None:
+            class_name = cls_fxn_match.group('class')
+            action_name = cls_fxn_match.group('action')
+            fxn_name = 'cls_{}'.format(action_name)
+            fxn = getattr(self, fxn_name, None)
+            args_txt = cls_fxn_match.group('args_txt').strip()
+            args = None
+            if class_name not in storage.model_classes.keys():
+                print("** class doesn't exist **")
+                return ''
+            if fxn_name not in dir(self):
+                super().onecmd(line)
+                return ''
+            if not isinstance(fxn, type(self.precmd)):
+                super().onecmd(line)
+                return ''
+            try:
+                if len(args_txt) == 0:
+                    args = tuple()
+                else:
+                    end_c = '' if args_txt.endswith(',') else ','
+                    args = eval('({}{})'.format(args_txt, end_c))
+                fxn(class_name, *args)
+                return ''
+            except Exception:
+                super().onecmd(line)
+                return ''
+        else:
+            super().onecmd(line)
+            return ''
+
     def postcmd(self, stop, line):
-        """Prints the prompt when isatty is false"""
+        """Performs the postcmd routine.
+        """
         if not sys.__stdin__.isatty():
             print('(hbnb) ', end='')
         return stop
@@ -70,7 +128,6 @@ class HBNBCommand(cmd.Cmd):
         """The create command.
         Usage: create <class name>
         """
-        # args = HBNBCommand.split_args(line)
         args = shlex.split(line)
         class_name = args[0] if len(args) >= 1 else None
         if class_name is None:
@@ -87,7 +144,6 @@ class HBNBCommand(cmd.Cmd):
         """The show command.
         Usage: show <class name> <id>
         """
-        # args = HBNBCommand.split_args(line)
         args = shlex.split(line)
         class_name = args[0] if len(args) >= 1 else None
         obj_id = args[1] if len(args) >= 2 else None
@@ -111,7 +167,6 @@ class HBNBCommand(cmd.Cmd):
         """The delete command.
         Usage: destroy <class name> <id>
         """
-        # args = HBNBCommand.split_args(line)
         args = shlex.split(line)
         class_name = args[0] if len(args) >= 1 else None
         obj_id = args[1] if len(args) >= 2 else None
@@ -140,7 +195,6 @@ class HBNBCommand(cmd.Cmd):
         """The all command.
         Usage: all [<class_name>]
         """
-        # args = HBNBCommand.split_args(line)
         args = shlex.split(line)
         class_name = args[0] if len(args) >= 1 else ''
         if (class_name in storage.model_classes.keys()) or (class_name == ''):
@@ -158,7 +212,6 @@ class HBNBCommand(cmd.Cmd):
         """The Update command.
         Usage: update <class name> <id> <attribute_name> <attribute_value>
         """
-        # args = HBNBCommand.split_args(line)
         args = shlex.split(line)
         ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
         class_name = args[0] if len(args) >= 1 else None
