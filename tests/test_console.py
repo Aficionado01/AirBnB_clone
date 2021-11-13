@@ -18,18 +18,12 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models.engine.file_storage import FileStorage
-from tests import write_text_file
-
-
-def clear_stream(stream: TextIO):
-    """Clears the contents of a given stream
-
-    Args:
-        stream (TextIO): The stream to clear.
-    """
-    if stream.seekable():
-        stream.seek(0)
-        stream.truncate(0)
+from tests import (
+    write_text_file,
+    delete_file,
+    reset_store,
+    clear_stream
+)
 
 
 class TestHBNBCommand(unittest.TestCase):
@@ -57,3 +51,48 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('')
             cons.onecmd('  ')
             self.assertEqual(cout.getvalue(), '*** Unknown syntax: ls\n')
+
+    def test_do_create(self):
+        """Tests the do_create function of the HBNBCommand class.
+        """
+        delete_file('file.json')
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            self.assertEqual(len(storage.all()), 0)
+            # with no class
+            clear_stream(cout)
+            cons.onecmd('create')
+            self.assertEqual(cout.getvalue(), "** class name missing **\n")
+            # with invalid args
+            clear_stream(cout)
+            cons.onecmd('create 456')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            clear_stream(cout)
+            cons.onecmd('create place')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            clear_stream(cout)
+            cons.onecmd('create PLACE')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            clear_stream(cout)
+            cons.onecmd('create PLACE Place')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            # with valid args
+            clear_stream(cout)
+            cons.onecmd('create State')
+            self.assertIn(
+                'State.{}'.format(cout.getvalue().strip()),
+                storage.all()
+            )
+            # with valid args (only one class is taken)
+            clear_stream(cout)
+            cons.onecmd('create State City')
+            self.assertIn(
+                'State.{}'.format(cout.getvalue().strip()),
+                storage.all()
+            )
+            self.assertNotIn(
+                'City.{}'.format(cout.getvalue().strip()),
+                storage.all()
+            )
+            reset_store(storage)

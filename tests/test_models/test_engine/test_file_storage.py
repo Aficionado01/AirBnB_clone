@@ -4,6 +4,7 @@
 import os
 import unittest
 
+from models import storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
 from models.city import City
@@ -12,7 +13,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-from tests import write_text_file
+from tests import write_text_file, reset_store
 
 
 class TestFileStorage(unittest.TestCase):
@@ -30,15 +31,22 @@ class TestFileStorage(unittest.TestCase):
         """
         write_text_file('file.json', '{}')
         store = FileStorage()
-        store.reload()
+        self.assertEqual(len(store.all()), 0)
         mdl = BaseModel()
+        store.new(mdl)
         self.assertEqual(len(store.all()), 1)
         mdl = User()
+        store.new(mdl)
         mdl = City()
+        store.new(mdl)
         mdl = State()
+        store.new(mdl)
         mdl = Amenity()
+        store.new(mdl)
         mdl = Place()
+        store.new(mdl)
         mdl = Review()
+        store.new(mdl)
         self.assertEqual(len(store.all()), 7)
         with self.assertRaises(TypeError):
             store.all(mdl, None)
@@ -52,9 +60,8 @@ class TestFileStorage(unittest.TestCase):
     def test_new(self):
         """Tests the new function of the FileStorage class.
         """
-        write_text_file('file.json', '{}')
         store = FileStorage()
-        store.reload()
+        reset_store(store)
         mdl = User(**{'id': '5'})
         store.new(mdl)
         self.assertEqual(len(store.all()), 1)
@@ -93,25 +100,32 @@ class TestFileStorage(unittest.TestCase):
     def test_reload(self):
         """Tests the reload function of the FileStorage class.
         """
-        write_text_file('file.json', '{}')
+        reset_store(storage)
         store = FileStorage()
-        store.reload()
+        reset_store(store)
         self.assertEqual(len(store.all()), 0)
         if os.path.isfile('file.json'):
             os.unlink('file.json')
         self.assertFalse(os.path.isfile('file.json'))
         store.reload()
         self.assertFalse(os.path.isfile('file.json'))
-        mdl = User(**{'id': '5'})
-        mdl1 = City(**{'id': '7', 'name': 'Oklahoma'})
+        mdl = User(id='5')
+        mdl1 = City(id='7', name='Oklahoma')
+        self.assertEqual(len(store.all()), 0)
         store.new(mdl)
         store.new(mdl1)
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')
         store.save()
         self.assertEqual(len(store.all()), 2)
         new_store = FileStorage()
-        self.assertEqual(len(new_store.all()), 2)
-        if os.path.isfile('file.json'):
-            os.unlink('file.json')
+        with open('file.json', mode='w') as file:
+            file.write('{}')
+        self.assertTrue(new_store.all() is not None)
+        reset_store(new_store)
+        new_store.reload()
+        self.assertEqual(len(new_store.all()), 0)
+        store.save()
         new_store.reload()
         self.assertEqual(len(new_store.all()), 2)
         with open('file.json', mode='w') as file:
