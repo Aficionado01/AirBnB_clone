@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """A module containing the file storage engine.
 """
+import os
 from importlib import import_module
 from json import JSONDecoder, JSONEncoder
-import os
 
 
 class FileStorage:

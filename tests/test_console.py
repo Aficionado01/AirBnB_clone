@@ -7,7 +7,7 @@ from datetime import datetime
 from io import StringIO
 from unittest.mock import patch
 
-from console import HBNBCommand, storage
+from console import HBNBCommand
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
@@ -16,7 +16,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
-from tests import remove_files, write_text_file
+from tests import write_text_file
 
 
 class TestHBNBCommand(unittest.TestCase):
@@ -871,7 +871,8 @@ class TestHBNBCommand(unittest.TestCase):
             User().save()
             HBNBCommand().precmd('User.count()')
             self.assertEqual(istdout.getvalue(), '2\n')
-        remove_files()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')
         with patch('sys.stdout', new=StringIO()) as istdout:
             State().save()
             State().save()

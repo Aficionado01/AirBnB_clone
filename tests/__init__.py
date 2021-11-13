@@ -4,14 +4,6 @@
 import os
 
 
-def remove_files():
-    """Removes the serialized object files from the
-    current working directory.
-    """
-    if os.path.isfile('file.json'):
-        os.unlink('file.json')
-
-
 def read_text_file(file_name):
     """Reads the contents of a given file.
 
