@@ -8,6 +8,7 @@ from io import StringIO
 from unittest.mock import patch
 
 from console import HBNBCommand, storage
+from models import storage
 from models.base_model import BaseModel
 from models.user import User
 from models.state import State
@@ -231,10 +232,7 @@ class TestHBNBCommand(unittest.TestCase):
             mdl = User()
             mdl.save()
             HBNBCommand().onecmd('show BaseModel {}'.format(mdl.id))
-            self.assertRegex(
-                istdout.getvalue(),
-                r'\[User\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
-            )
+            self.assertEqual(istdout.getvalue(), '** no instance found **\n')
         with patch('sys.stdout', new=StringIO()) as istdout:
             mdl = User()
             mdl1 = User()
@@ -307,8 +305,8 @@ class TestHBNBCommand(unittest.TestCase):
             mdl.save()
             self.assertIn(mdl, storage.all().values())
             HBNBCommand().onecmd('destroy BaseModel {}'.format(mdl.id))
-            self.assertEqual(istdout.getvalue(), '')
-            self.assertNotIn(mdl, storage.all().values())
+            self.assertEqual(istdout.getvalue(), '** no instance found **\n')
+            self.assertIn(mdl, storage.all().values())
         with patch('sys.stdout', new=StringIO()) as istdout:
             mdl = User()
             mdl1 = User()
@@ -870,7 +868,7 @@ class TestHBNBCommand(unittest.TestCase):
             BaseModel().save()
             Review().save()
             HBNBCommand().precmd('BaseModel.count()')
-            self.assertEqual(istdout.getvalue(), '2\n')
+            self.assertEqual(istdout.getvalue(), '1\n')
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
@@ -951,10 +949,7 @@ class TestHBNBCommand(unittest.TestCase):
             mdl = Amenity()
             mdl.save()
             HBNBCommand().precmd('BaseModel.show("{}")'.format(mdl.id))
-            self.assertRegex(
-                istdout.getvalue(),
-                r'\[Amenity\] \({}\) {}\n'.format(mdl.id, r'\{.+\}')
-            )
+            self.assertRegex(istdout.getvalue(), '** no instance found **\n')
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:
@@ -1051,8 +1046,8 @@ class TestHBNBCommand(unittest.TestCase):
             mdl.save()
             self.assertIn('State.{}'.format(mdl.id), storage.all().keys())
             HBNBCommand().precmd('BaseModel.destroy("{}")'.format(mdl.id))
-            self.assertEqual(istdout.getvalue(), '')
-            self.assertNotIn('State.{}'.format(mdl.id), storage.all().keys())
+            self.assertEqual(istdout.getvalue(), '** no instance found **\n')
+            self.assertIn('State.{}'.format(mdl.id), storage.all().keys())
         # only instances of the respective class can be destroyed
         write_text_file('file.json', '{}')
         storage.reload()
