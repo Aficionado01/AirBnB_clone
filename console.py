@@ -4,6 +4,7 @@
 import cmd
 import re
 import shlex
+import sys
 
 from models import storage
 
@@ -11,15 +12,18 @@ from models import storage
 class HBNBCommand(cmd.Cmd):
     """Represents the command interpreter for the AirBnB clone.
     """
+    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
-    def __init__(self):
-        """Initializes the AirBnB clone command interpreter.
-        """
-        super().__init__()
-        if (not self.stdin.closed) and (self.stdin.isatty()):
-            self.prompt = '(hbnb) '
-        else:
-            self.prompt = '(hbnb) \n'
+    def preloop(self):
+        """Prints the prompt when isatty is false"""
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
+
+    def postcmd(self, stop, line):
+        """Prints the prompt when isatty is false"""
+        if not sys.__stdin__.isatty():
+            print('(hbnb) ', end='')
+        return stop
 
     @staticmethod
     def split_args(line):
