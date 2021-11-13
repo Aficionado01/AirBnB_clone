@@ -4,6 +4,7 @@
 import cmd
 import enum
 import re
+import sys
 
 from models import storage
 
@@ -35,7 +36,10 @@ class HBNBCommand(cmd.Cmd):
         """Initializes the AirBnB clone command interpreter.
         """
         super().__init__()
-        self.prompt = '(hbnb) '
+        if sys.stdin.isatty():
+            self.prompt = '(hbnb) '
+        else:
+            self.prompt = '(hbnb) \n'
 
     @staticmethod
     def split_args(line):
