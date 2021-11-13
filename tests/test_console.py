@@ -746,10 +746,7 @@ class TestHBNBCommand(unittest.TestCase):
             mdl = Amenity()
             mdl.save()
             HBNBCommand().precmd('BaseModel.all()')
-            self.assertRegex(
-                istdout.getvalue(),
-                r'\[\[Amenity\] \({}\) {}\]\n'.format(mdl.id, r'\{.+\}')
-            )
+            self.assertEqual(istdout.getvalue(), '[]\n')
         write_text_file('file.json', '{}')
         storage.reload()
         with patch('sys.stdout', new=StringIO()) as istdout:

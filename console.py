@@ -195,7 +195,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, line):
         """Prints the string representation of all types of the
-        given class name or any.
+        given class name or any if the class name is omitted.
         Usage: all [<class_name>]
         """
         args = HBNBCommand.split_args(line)
