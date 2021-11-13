@@ -1,12 +1,8 @@
 #!/usr/bin/python3
 """A module containing the base model for all data sets.
 """
-import typing
 from datetime import datetime
 from uuid import uuid4
-
-if typing.TYPE_CHECKING:
-    from models import storage
 
 
 class BaseModel:
@@ -19,9 +15,8 @@ class BaseModel:
             *args (tuple): Ignored.
             kwargs: A dictionary of attribute keys-value pairs.
         """
-        if 'storage' not in dir():
-            from models import storage
-        if (len(kwargs) > 0):
+        from models import storage
+        if len(kwargs) > 0:
             for key, value in kwargs.items():
                 if key != '__class__':
                     if key in ('created_at', 'updated_at'):
@@ -51,8 +46,7 @@ class BaseModel:
     def save(self) -> None:
         """Saves the changes made to this BaseModel instance.
         """
-        if 'storage' not in dir():
-            from models import storage
+        from models import storage
         self.updated_at = datetime.now()
         storage.save()
 
