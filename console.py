@@ -158,7 +158,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         for obj in storage.all().values():
-            if isinstance(obj, storage.model_classes[class_name]):
+            if type(obj) is storage.model_classes[class_name]:
                 if obj.id == obj_id:
                     print(obj)
                     return
@@ -183,7 +183,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         for id, obj in storage.all().items():
-            if isinstance(obj, storage.model_classes[class_name]):
+            if type(obj) is storage.model_classes[class_name]:
                 if obj.id == obj_id:
                     obj_store_id = id
                     break
@@ -233,7 +233,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         for store_obj in storage.all().values():
-            if isinstance(store_obj, storage.model_classes[class_name]):
+            if type(store_obj) is storage.model_classes[class_name]:
                 if store_obj.id == obj_id:
                     obj = store_obj
                     break
@@ -284,7 +284,7 @@ class HBNBCommand(cmd.Cmd):
         if class_name in storage.model_classes.keys():
             n = 0
             for obj in storage.all().values():
-                if isinstance(obj, storage.model_classes[class_name]):
+                if type(obj) is storage.model_classes[class_name]:
                     n += 1
             print(n)
         else:
@@ -309,7 +309,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         for obj in storage.all().values():
-            if isinstance(obj, storage.model_classes[class_name]):
+            if type(obj) is storage.model_classes[class_name]:
                 if obj.id == obj_id:
                     print(obj)
                     return
@@ -335,7 +335,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         for id, obj in storage.all().items():
-            if isinstance(obj, storage.model_classes[class_name]):
+            if type(obj) is storage.model_classes[class_name]:
                 if obj.id == obj_id:
                     obj_store_id = id
                     break
@@ -366,7 +366,7 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
         for store_obj in storage.all().values():
-            if isinstance(store_obj, storage.model_classes[class_name]):
+            if type(store_obj) is storage.model_classes[class_name]:
                 if store_obj.id == obj_id:
                     obj = store_obj
                     break
