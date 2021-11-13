@@ -39,7 +39,27 @@ class HBNBCommand(cmd.Cmd):
         if sys.stdin.isatty():
             self.prompt = '(hbnb) '
         else:
-            self.prompt = '(hbnb) \n'
+            self.prompt = ''
+
+    def preloop(self):
+        """Performs some routines before each loop.
+        """
+        if not sys.stdin.isatty():
+            print('(hbnb)')
+
+    def postcmd(self, stop: bool, line: str):
+        """Performs some routines after each command execution.
+
+        Args:
+            stop (bool): Specifies whether the REPL should be stopped.
+            line (str): The value of the current command line.
+
+        Returns:
+            bool: Specifies whether the REPL should be stopped.
+        """
+        if not sys.stdin.isatty():
+            print('(hbnb) ', end='')
+        return stop
 
     @staticmethod
     def split_args(line):
