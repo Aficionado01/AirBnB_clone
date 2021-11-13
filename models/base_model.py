@@ -26,9 +26,8 @@ class BaseModel:
             # self.updated_at = datetime.now()
         else:
             self.id = str(uuid4())
-            time_c = datetime.now()
-            self.created_at = time_c
-            self.updated_at = time_c
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
             storage.new(self)
 
     def __str__(self):
