@@ -42,54 +42,6 @@ class HBNBCommand(cmd.Cmd):
                     args_list.append(match)
         return args_list
 
-    # def precmd(self, line):
-    #     """Runs some actions before a line of command is executed.
-
-    #     Args:
-    #         line (str): The line of command to be executed.
-    #     Returns:
-    #         str: The next line of command to execute.
-    #     """
-    #     patterns = (
-    #         r'(?P<class>[a-zA-Z]+)',
-    #         r'(?P<action>[a-zA-Z]+)',
-    #         r'(?P<args_txt>.*)',
-    #     )
-    #     cls_fxn_fmt = r'{}\s*\.\s*{}\s*\({}\)'.format(
-    #         patterns[0], patterns[1], patterns[2]
-    #     )
-    #     cls_fxn_match = re.fullmatch(cls_fxn_fmt, line)
-    #     if cls_fxn_match is not None:
-    #         class_name = cls_fxn_match.group('class')
-    #         action_name = cls_fxn_match.group('action')
-    #         fxn_name = 'cls_{}'.format(action_name)
-    #         fxn = getattr(self, fxn_name, None)
-    #         args_txt = cls_fxn_match.group('args_txt').strip()
-    #         args = None
-    #         if class_name not in storage.model_classes.keys():
-    #             print("** class doesn't exist **")
-    #             return ''
-    #         if fxn_name not in dir(self):
-    #             # super().onecmd(line)
-    #             return line
-    #         if not isinstance(fxn, type(self.precmd)):
-    #             # super().onecmd(line)
-    #             return line
-    #         try:
-    #             if len(args_txt) == 0:
-    #                 args = tuple()
-    #             else:
-    #                 end_c = '' if args_txt.endswith(',') else ','
-    #                 args = eval('({}{})'.format(args_txt, end_c))
-    #             fxn(class_name, *args)
-    #             return ''
-    #         except Exception:
-    #             # super().onecmd(line)
-    #             return line
-    #     else:
-    #         # super().onecmd(line)
-    #         return line
-
     def do_EOF(self, line):
         """Exits this application.
         Usage: EOF
@@ -204,7 +156,7 @@ class HBNBCommand(cmd.Cmd):
         Usage: update <class name> <id> <attribute_name> <attribute_value>
         """
         args = HBNBCommand.split_args(line)
-        ignored_attrs = ('id', 'created_at', 'updated_at')
+        ignored_attrs = ('id', 'created_at', 'updated_at', '__class_')
         class_name = args[0] if len(args) >= 1 else None
         obj_id = args[1] if len(args) >= 2 else None
         attr_name = args[2] if len(args) >= 3 else None
