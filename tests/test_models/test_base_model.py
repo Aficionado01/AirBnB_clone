@@ -27,41 +27,46 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(BaseModel().created_at, datetime)
         self.assertIsInstance(BaseModel().updated_at, datetime)
         # Tests for the uniqueness in ID's
-        bm1 = BaseModel()
-        bm2 = BaseModel()
-        self.assertNotEqual(bm1.id, bm2.id)
+        mdl1 = BaseModel()
+        mdl2 = BaseModel()
+        self.assertNotEqual(mdl1.id, mdl2.id)
         # Tests for differences in created time
-        bm3 = BaseModel()
+        mdl3 = BaseModel()
         sleep(0.06)
-        bm4 = BaseModel()
-        self.assertLess(bm3.created_at, bm4.created_at)
+        mdl4 = BaseModel()
+        self.assertLess(mdl3.created_at, mdl4.created_at)
         # Tests for differences in updated time
-        bm3 = BaseModel()
+        mdl3 = BaseModel()
         sleep(0.06)
-        bm4 = BaseModel()
-        self.assertLess(bm3.updated_at, bm4.updated_at)
+        mdl4 = BaseModel()
+        self.assertLess(mdl3.updated_at, mdl4.updated_at)
         # Tests for unused args
-        bm = BaseModel(None)
-        self.assertNotIn(None, bm.__dict__.values())
+        mdl = BaseModel(None)
+        self.assertNotIn(None, mdl.__dict__.values())
         # Tests instantiation with kwargs
         datetime_now = datetime.today()
         datetime_now_iso = datetime_now.isoformat()
-        bm = BaseModel(id='012', created_at=datetime_now_iso,
-                       updated_at=datetime_now_iso)
-        self.assertEqual(bm.id, '012')
-        self.assertEqual(bm.created_at, datetime_now)
-        self.assertEqual(bm.updated_at, datetime_now)
+        mdl = BaseModel(
+            id='012',
+            created_at=datetime_now_iso,
+            updated_at=datetime_now_iso
+        )
+        self.assertEqual(mdl.id, '012')
+        self.assertEqual(mdl.created_at, datetime_now)
+        self.assertEqual(mdl.updated_at, datetime_now)
         # Tests instantiations with None kwargs
         with self.assertRaises(TypeError):
             BaseModel(id=None, created_at=None, updated_at=None)
         # Tests instantiation with args and kwargs
         datetime_now = datetime.today()
         datetime_now_iso = datetime_now.isoformat()
-        bm = BaseModel('01', id='012', created_at=datetime_now_iso,
-                       updated_at=datetime_now_iso)
-        self.assertEqual(bm.id, '012')
-        self.assertEqual(bm.created_at, datetime_now)
-        self.assertEqual(bm.updated_at, datetime_now)
+        mdl = BaseModel(
+            '01', id='012', created_at=datetime_now_iso,
+            updated_at=datetime_now_iso
+        )
+        self.assertEqual(mdl.id, '012')
+        self.assertEqual(mdl.created_at, datetime_now)
+        self.assertEqual(mdl.updated_at, datetime_now)
         self.assertEqual(BaseModel(id=45).id, 45)
         self.assertEqual(BaseModel(id=None).id, None)
         self.assertNotEqual(BaseModel('cc5f').id, 'cc5f')
@@ -87,19 +92,23 @@ class TestBaseModel(unittest.TestCase):
         """
         datetime_now = datetime.today()
         datetime_now_repr = repr(datetime_now)
-        bm = BaseModel()
-        bm.id = '012345'
-        bm.created_at = bm.updated_at = datetime_now
-        bm_str = str(bm)
-        self.assertIn("[BaseModel] (012345)", bm_str)
-        self.assertIn("'id': '012345'", bm_str)
-        self.assertIn("'created_at': " + datetime_now_repr, bm_str)
-        self.assertIn("'updated_at': " + datetime_now_repr, bm_str)
+        mdl = BaseModel()
+        mdl.id = '012345'
+        mdl.created_at = mdl.updated_at = datetime_now
+        mdl_str = str(mdl)
+        self.assertIn("[BaseModel] (012345)", mdl_str)
+        self.assertIn("'id': '012345'", mdl_str)
+        self.assertIn("'created_at': " + datetime_now_repr, mdl_str)
+        self.assertIn("'updated_at': " + datetime_now_repr, mdl_str)
         self.assertIn("'id': ", str(BaseModel()))
         self.assertIn("'created_at': ", str(BaseModel()))
         self.assertIn("'updated_at': ", str(BaseModel()))
         self.assertIn(
-            "'gender': ",
+            "'gender': 'female'",
+            str(BaseModel(gender='female', id='m-77'))
+        )
+        self.assertIn(
+            "'id': 'm-77'",
             str(BaseModel(gender='female', id='m-77'))
         )
         self.assertNotIn(
@@ -179,38 +188,40 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(BaseModel().to_dict()['updated_at'], str)
         # Tests to_dict output
         datetime_now = datetime.today()
-        bm = BaseModel()
-        bm.id = '012345'
-        bm.created_at = bm.updated_at = datetime_now
+        mdl = BaseModel()
+        mdl.id = '012345'
+        mdl.created_at = mdl.updated_at = datetime_now
         to_dict = {
             'id': '012345',
             '__class__': 'BaseModel',
             'created_at': datetime_now.isoformat(),
             'updated_at': datetime_now.isoformat()
         }
-        self.assertDictEqual(bm.to_dict(), to_dict)
+        self.assertDictEqual(mdl.to_dict(), to_dict)
         self.assertDictEqual(
-            BaseModel(id='u-b34', age=13).to_dict(), {
+            BaseModel(id='u-b34', age=13).to_dict(),
+            {
                 '__class__': 'BaseModel',
                 'id': 'u-b34',
                 'age': 13
             }
         )
         self.assertDictEqual(
-            BaseModel(id='u-b34', age=None).to_dict(), {
+            BaseModel(id='u-b34', age=None).to_dict(),
+            {
                 '__class__': 'BaseModel',
                 'id': 'u-b34',
                 'age': None
             }
         )
         # Tests to_dict output contradiction
-        bm_d = BaseModel()
+        mdl_d = BaseModel()
         self.assertIn('__class__', BaseModel().to_dict())
         self.assertNotIn('__class__', BaseModel().__dict__)
-        self.assertNotEqual(bm_d.to_dict(), bm_d.__dict__)
+        self.assertNotEqual(mdl_d.to_dict(), mdl_d.__dict__)
         self.assertNotEqual(
-            bm_d.to_dict()['__class__'],
-            bm_d.__class__
+            mdl_d.to_dict()['__class__'],
+            mdl_d.__class__
         )
         # Tests to_dict with arg
         with self.assertRaises(TypeError):
