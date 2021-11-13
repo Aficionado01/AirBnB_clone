@@ -14,11 +14,11 @@ class HBNBCommand(cmd.Cmd):
     """
     prompt = '(hbnb) ' if sys.stdin.isatty() else ''
 
-    # def preloop(self):
-    #     """Performs the preloop routine.
-    #     """
-    #     if not sys.__stdin__.isatty():
-    #         print('(hbnb)')
+    def preloop(self):
+        """Performs the preloop routine.
+        """
+        if not sys.__stdin__.isatty():
+            print('(hbnb)')
 
     def precmd(self, line):
         """Runs some actions before a line of command is executed.
@@ -68,12 +68,12 @@ class HBNBCommand(cmd.Cmd):
             super().onecmd(line)
             return ''
 
-    # def postcmd(self, stop, line):
-    #     """Performs the postcmd routine.
-    #     """
-    #     if not sys.__stdin__.isatty():
-    #         print('(hbnb) ', end='')
-    #     return stop
+    def postcmd(self, stop, line):
+        """Performs the postcmd routine.
+        """
+        if not sys.__stdin__.isatty():
+            print('(hbnb) ', end='')
+        return stop
 
     @staticmethod
     def split_args(line):
