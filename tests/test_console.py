@@ -540,8 +540,8 @@ class TestHBNBCommand(unittest.TestCase):
             HBNBCommand().onecmd('all')
             self.assertRegex(
                 istdout.getvalue(),
-                r'\["\[User\] \({}\) {}"'.format(mdl.id, r'\{.+\}')
-                + r', "\[City\] \({}\) {}"\]\n'.format(mdl1.id, r'\{.+\}')
+                r'\["\[User\] \({}\) {}"'.format(mdl.id, r'\{.+\}') +
+                r', "\[City\] \({}\) {}"\]\n'.format(mdl1.id, r'\{.+\}')
             )
         write_text_file('file.json', '{}')
         storage.reload()
@@ -821,8 +821,8 @@ class TestHBNBCommand(unittest.TestCase):
             HBNBCommand().precmd('City.all()')
             self.assertRegex(
                 istdout.getvalue(),
-                r'\[\[City\] \(({}|{})\) {}, '.format(a.id, b.id, r'\{.+\}')
-                + r'\[City\] \(({}|{})\) {}\]\n'.format(a.id, b.id, r'\{.+\}')
+                r'\[\[City\] \(({}|{})\) {}, '.format(a.id, b.id, r'\{.+\}') +
+                r'\[City\] \(({}|{})\) {}\]\n'.format(a.id, b.id, r'\{.+\}')
             )
 
     def test_cls_count(self):
