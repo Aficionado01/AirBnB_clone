@@ -16,7 +16,7 @@ class HBNBCommand(cmd.Cmd):
         """Initializes the AirBnB clone command interpreter.
         """
         super().__init__()
-        if (not sys.__stdin__.closed) and (sys.__stdin__.isatty()):
+        if (not self.stdin.closed) and (self.stdin.isatty()):
             self.prompt = '(hbnb) '
         else:
             self.prompt = ''
@@ -41,6 +41,19 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     args_list.append(match)
         return args_list
+
+    def preloop(self) -> None:
+        """Executes the preloop routine.
+        """
+        if (self.stdin.closed) or (not self.stdin.isatty()):
+            print('(hbnb)')
+
+    def postcmd(self, stop: bool, line: str) -> bool:
+        """The postcmd routine.
+        """
+        if (self.stdin.closed) or (not self.stdin.isatty()):
+            print('(hbnb)')
+        return stop
 
     def precmd(self, line):
         """Runs some actions before a line of command is executed.
