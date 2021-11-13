@@ -28,17 +28,17 @@ class HBNBCommand(cmd.Cmd):
         "** instance id missing **",
         "** no instance found **",
         "** attribute name missing **",
-        "** value missing **",
+        "** value missing **"
     )
 
-    def __init__(self) -> None:
+    def __init__(self):
         """Initializes the AirBnB clone command interpreter.
         """
         super().__init__()
         self.prompt = '(hbnb) '
 
     @staticmethod
-    def split_args(line: str):
+    def split_args(line):
         """Splits a line of arguments.
 
         Args:
@@ -58,7 +58,7 @@ class HBNBCommand(cmd.Cmd):
                     args_list.append(match)
         return args_list
 
-    def precmd(self, line: str) -> str:
+    def precmd(self, line):
         """Runs some actions before a line of command is executed.
 
         Args:
@@ -106,19 +106,19 @@ class HBNBCommand(cmd.Cmd):
             super().onecmd(line)
             return ''
 
-    def do_EOF(self, line: str) -> None:
+    def do_EOF(self, line):
         """Exits this application.
         Usage: EOF
         """
         exit(0)
 
-    def do_quit(self, line: str) -> None:
+    def do_quit(self, line):
         """Exits this application.
         Usage: quit
         """
         exit(0)
 
-    def emptyline(self) -> bool:
+    def emptyline(self):
         """Executes some actions when the command line is empty.
 
         Returns:
@@ -126,7 +126,7 @@ class HBNBCommand(cmd.Cmd):
         """
         return False
 
-    def do_create(self, line: str) -> None:
+    def do_create(self, line):
         """Creates a new instance of BaseModel, commits the changes,
         and prints the id.
         Usage: create <class name>
@@ -144,7 +144,7 @@ class HBNBCommand(cmd.Cmd):
         new_obj.save()
         print(new_obj.id)
 
-    def do_show(self, line: str) -> None:
+    def do_show(self, line):
         """Prints the string representation of an instance based
         on the class name and id
         Usage: show <class name> <id>
@@ -169,7 +169,7 @@ class HBNBCommand(cmd.Cmd):
                     return
         print(errors[ErrorTypes.Instance_Not_Existing])
 
-    def do_destroy(self, line: str) -> None:
+    def do_destroy(self, line):
         """Deletes an instance based on the class name and
         id and commits the changes.
         Usage: destroy <class name> <id>
@@ -199,7 +199,7 @@ class HBNBCommand(cmd.Cmd):
             storage.all().pop(obj_store_id)
             storage.save()
 
-    def do_all(self, line: str) -> None:
+    def do_all(self, line):
         """Prints the string representation of all instances of the
         given class name.
         Usage: all [<class_name>]
@@ -218,7 +218,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(errors[ErrorTypes.Class_Not_Existing])
 
-    def do_update(self, line: str) -> None:
+    def do_update(self, line):
         """Updates an instance based on the class name and id by
         adding or updating an attribute and commits the changes.
         Usage: update <class name> <id> <attribute_name> <attribute_value>
@@ -259,7 +259,7 @@ class HBNBCommand(cmd.Cmd):
             setattr(obj, attr_name, val)
             obj.save()
 
-    def cls_all(self, class_name: str, *args: tuple):
+    def cls_all(self, class_name, *args):
         """Retrieves all instances of a class.
 
         Args:
@@ -279,7 +279,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(errors[ErrorTypes.Class_Not_Existing])
 
-    def cls_count(self, class_name: str, *args: tuple) -> None:
+    def cls_count(self, class_name, *args):
         """Retrieves the number of instances of a class.
 
         Args:
@@ -299,7 +299,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(errors[ErrorTypes.Class_Not_Existing])
 
-    def cls_show(self, class_name: str, *args: tuple) -> None:
+    def cls_show(self, class_name, *args):
         """Retrieves an instances of a class based on its id.
 
         Args:
@@ -324,7 +324,7 @@ class HBNBCommand(cmd.Cmd):
                     return
         print(errors[ErrorTypes.Instance_Not_Existing])
 
-    def cls_destroy(self, class_name: str, *args: tuple) -> None:
+    def cls_destroy(self, class_name, *args):
         """Destroys an instances of a class based on its id.
 
         Args:
@@ -354,7 +354,7 @@ class HBNBCommand(cmd.Cmd):
             storage.all().pop(obj_store_id)
             storage.save()
 
-    def cls_update(self, class_name: str, *args: tuple) -> None:
+    def cls_update(self, class_name, *args):
         """Updates and instances of a class based on its id with or
         without a dictionary.
 

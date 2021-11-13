@@ -5,7 +5,6 @@ from datetime import datetime
 import os
 import unittest
 from io import StringIO
-from unittest.loader import getTestCaseNames
 from unittest.mock import patch
 
 from console import HBNBCommand, storage
