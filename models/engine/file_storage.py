@@ -12,7 +12,7 @@ class FileStorage:
     __file_path = 'file.json'
     __objects = {}
 
-    def __init__(self) -> None:
+    def __init__(self):
         """Initializes a FileStorage instance.
         """
         self.model_classes = {
@@ -25,7 +25,7 @@ class FileStorage:
             'Review': import_module('models.review').Review,
         }
 
-    def all(self) -> dict:
+    def all(self):
         """Returns all the stored objects.
 
         Returns:
@@ -33,7 +33,7 @@ class FileStorage:
         """
         return FileStorage.__objects
 
-    def new(self, obj) -> None:
+    def new(self, obj):
         """Stores a new object.
 
         Args:

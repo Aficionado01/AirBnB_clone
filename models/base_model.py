@@ -8,7 +8,7 @@ from uuid import uuid4
 class BaseModel:
     """Represents the base class for all data sets.
     """
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs):
         """Initializes a new instance of the BaseModel.
 
         Args:
@@ -30,7 +30,7 @@ class BaseModel:
             self.updated_at = datetime.now()
             storage.new(self)
 
-    def __str__(self) -> str:
+    def __str__(self):
         """Creates a string representation of a BaseModel instance.
 
         Returns:
@@ -43,14 +43,14 @@ class BaseModel:
         )
         return res
 
-    def save(self) -> None:
+    def save(self):
         """Saves the changes made to this BaseModel instance.
         """
         from models import storage
         self.updated_at = datetime.now()
         storage.save()
 
-    def to_dict(self) -> dict:
+    def to_dict(self):
         """Returns a dictionary consisting of this BaseModel instance's
         attibute keys and values.
 
