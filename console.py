@@ -46,7 +46,7 @@ class HBNBCommand(cmd.Cmd):
         """Executes the preloop routine.
         """
         if (self.stdin.closed) or (not self.stdin.isatty()):
-            print('(hbnb)')
+            print('(hbnb) ')
 
     def postcmd(self, stop: bool, line: str) -> bool:
         """The postcmd routine.
@@ -194,18 +194,18 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, line):
-        """Prints the string representation of all instances of the
-        given class name.
+        """Prints the string representation of all types of the
+        given class name or any.
         Usage: all [<class_name>]
-            <class_name> - One of the values in the set {BaseModel, User}.
-                Default: BaseModel.
         """
         args = HBNBCommand.split_args(line)
-        class_name = args[0] if len(args) >= 1 else 'BaseModel'
-        if class_name in storage.model_classes.keys():
+        class_name = args[0] if len(args) >= 1 else ''
+        if (class_name in storage.model_classes.keys()) or (class_name == ''):
             all_class_objs = []
             for obj in storage.all().values():
-                if isinstance(obj, storage.model_classes[class_name]):
+                if class_name == '':
+                    all_class_objs.append(str(obj))
+                elif type(obj) is storage.model_classes[class_name]:
                     all_class_objs.append(str(obj))
             print(all_class_objs)
         else:
@@ -252,7 +252,7 @@ class HBNBCommand(cmd.Cmd):
             obj.save()
 
     def cls_all(self, class_name, *args):
-        """Retrieves all instances of a class.
+        """Retrieves all types of a class.
 
         Args:
             class_name (str): The name of the class.
@@ -264,7 +264,7 @@ class HBNBCommand(cmd.Cmd):
         if class_name in storage.model_classes.keys():
             all_class_objs = []
             for obj in storage.all().values():
-                if isinstance(obj, storage.model_classes[class_name]):
+                if type(obj) is storage.model_classes[class_name]:
                     all_class_objs.append(str(obj))
             print('[{}]'.format(', '.join(all_class_objs)))
         else:
