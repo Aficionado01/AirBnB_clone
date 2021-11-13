@@ -12,15 +12,7 @@ from models import storage
 class HBNBCommand(cmd.Cmd):
     """Represents the command interpreter for the AirBnB clone.
     """
-
-    def __init__(self):
-        """Initializes the AirBnB clone command interpreter.
-        """
-        super().__init__()
-        if (not sys.stdin.closed) and (sys.__stdin__.isatty()):
-            self.prompt = '(hbnb) '
-        else:
-            self.prompt = ''
+    prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     def preloop(self):
         """Performs the preloop routine.
