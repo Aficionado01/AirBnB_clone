@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """A unit test module for the place model.
 """
+import os
 import unittest
 from datetime import datetime
 
@@ -194,3 +195,10 @@ class TestPlace(unittest.TestCase):
             Place().to_dict(Place())
         with self.assertRaises(TypeError):
             Place().to_dict(45)
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')

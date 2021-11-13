@@ -126,3 +126,10 @@ class TestFileStorage(unittest.TestCase):
             store.reload(mdl, mdl)
         with self.assertRaises(TypeError):
             store.reload(None)
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')

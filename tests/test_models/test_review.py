@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """A unit test module for the review model.
 """
+import os
 import unittest
 from datetime import datetime
 
@@ -146,3 +147,10 @@ class TestReview(unittest.TestCase):
             Review().to_dict(Review())
         with self.assertRaises(TypeError):
             Review().to_dict(45)
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')

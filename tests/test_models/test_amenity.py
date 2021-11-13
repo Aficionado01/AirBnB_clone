@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 """A unit test module for the amenity model.
 """
-from datetime import datetime
+import os
 import unittest
+from datetime import datetime
 
 from models.base_model import BaseModel
 from models.amenity import Amenity
@@ -134,3 +135,10 @@ class TestAmenity(unittest.TestCase):
             Amenity().to_dict(Amenity())
         with self.assertRaises(TypeError):
             Amenity().to_dict(45)
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')

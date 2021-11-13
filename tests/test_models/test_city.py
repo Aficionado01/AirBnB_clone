@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """A unit test module for the city model.
 """
+import os
 import unittest
 from datetime import datetime
 
@@ -140,3 +141,10 @@ class TestCity(unittest.TestCase):
             City().to_dict(City())
         with self.assertRaises(TypeError):
             City().to_dict(45)
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')

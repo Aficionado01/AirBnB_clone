@@ -230,3 +230,10 @@ class TestBaseModel(unittest.TestCase):
             BaseModel().to_dict(BaseModel())
         with self.assertRaises(TypeError):
             BaseModel().to_dict(45)
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')

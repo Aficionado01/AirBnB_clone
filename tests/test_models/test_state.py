@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 """A unit test module for the state model.
 """
-from datetime import datetime
+import os
 import unittest
+from datetime import datetime
 
 from models.base_model import BaseModel
 from models.state import State
@@ -134,3 +135,10 @@ class TestState(unittest.TestCase):
             State().to_dict(State())
         with self.assertRaises(TypeError):
             State().to_dict(45)
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')

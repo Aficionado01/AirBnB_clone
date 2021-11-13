@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """A unit test module for the user model.
 """
+import os
 import unittest
 from datetime import datetime
 
@@ -152,3 +153,10 @@ class TestUser(unittest.TestCase):
             User().to_dict(User())
         with self.assertRaises(TypeError):
             User().to_dict(45)
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')

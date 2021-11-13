@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """A unit test module for the console (command interpreter).
 """
-from datetime import datetime
 import os
 import unittest
+from datetime import datetime
 from io import StringIO
 from unittest.mock import patch
 
@@ -1225,3 +1225,10 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(istdout.getvalue(), "")
             self.assertNotEqual(mdl_s.updated_at, time_s)
         # endregion
+
+    def tearDown(self):
+        """Deconstructs this test class.
+        """
+        super().tearDown()
+        if os.path.isfile('file.json'):
+            os.unlink('file.json')
