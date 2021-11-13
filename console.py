@@ -19,7 +19,7 @@ class HBNBCommand(cmd.Cmd):
         if (not sys.__stdin__.closed) and (sys.__stdin__.isatty()):
             self.prompt = '(hbnb) '
         else:
-            self.prompt = '(hbnb) \n'
+            self.prompt = ''
 
     @staticmethod
     def split_args(line):
@@ -82,9 +82,10 @@ class HBNBCommand(cmd.Cmd):
                     end_c = '' if args_txt.endswith(',') else ','
                     args = eval('({}{})'.format(args_txt, end_c))
                 fxn(class_name, *args)
+                return ''
             except Exception:
                 super().onecmd(line)
-            return ''
+                return ''
         else:
             super().onecmd(line)
             return ''
