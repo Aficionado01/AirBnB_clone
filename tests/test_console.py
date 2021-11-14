@@ -10,17 +10,17 @@ from unittest.mock import patch
 
 from console import HBNBCommand
 from models import storage
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-from models.engine.file_storage import FileStorage
+# from models.base_model import BaseModel
+# from models.user import User
+# from models.state import State
+# from models.city import City
+# from models.amenity import Amenity
+# from models.place import Place
+# from models.review import Review
+# from models.engine.file_storage import FileStorage
 from tests import (
-    write_text_file,
-    delete_file,
+    # write_text_file,
+    # delete_file,
     reset_store,
     clear_stream
 )
@@ -52,49 +52,62 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('  ')
             self.assertEqual(cout.getvalue(), '*** Unknown syntax: ls\n')
 
-    def test_do_help(self):
-        """Tests the do_help function of the HBNBCommand class.
-        """
-        with patch('sys.stdout', new=StringIO()) as cout:
-            cons = HBNBCommand()
-            reset_store(storage)
-            cons.onecmd('help')
-            self.assertNotEqual(cout.getvalue().strip(), '')
-            clear_stream(cout)
-            cons.onecmd('help create')
-            self.assertNotEqual(cout.getvalue().strip(), '')
-
-    def test_do_quit(self):
-        """Tests the do_quit function of the HBNBCommand class.
+    def test_do_EOF(self):
+        """Tests the do_EOF function of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
             reset_store(storage)
             # no arguments
             with self.assertRaises(SystemExit) as ex:
-                cons.onecmd('quit')
+                cons.onecmd('EOF')
             self.assertEqual(cout.getvalue().strip(), '')
             self.assertEqual(ex.exception.code, 0)
             # arguments
             clear_stream(cout)
             with self.assertRaises(SystemExit) as ex:
-                cons.onecmd('quit 5')
+                cons.onecmd('EOF 5')
             self.assertEqual(cout.getvalue().strip(), '')
             self.assertEqual(ex.exception.code, 0)
-            # commands before quit
+            # commands before EOF
             clear_stream(cout)
             with self.assertRaises(SystemExit) as ex:
                 cons.onecmd('ls')
-                cons.onecmd('quit')
+                cons.onecmd('EOF')
             self.assertEqual(cout.getvalue(), '*** Unknown syntax: ls\n')
             self.assertEqual(ex.exception.code, 0)
-            # commands after quit
+            # commands after EOF
             clear_stream(cout)
             with self.assertRaises(SystemExit) as ex:
-                cons.onecmd('quit')
+                cons.onecmd('EOF')
                 cons.onecmd('ls')
             self.assertEqual(cout.getvalue().strip(), '')
+            self.assertEqual(cons.lastcmd, '')
             self.assertEqual(ex.exception.code, 0)
+
+    def test_do_all(self):
+        """Tests the do_all function of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # no arguments
+            cons.onecmd('create Amenity')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.onecmd('all')
+            self.assertIn('[Amenity] ({})'.format(mdl_id), cout.getvalue())
+            # valid class argument
+            cons.onecmd('create State')
+            mdl1_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.onecmd('all Amenity')
+            self.assertIn('[Amenity] ({})'.format(mdl_id), cout.getvalue())
+            self.assertNotIn('[State] ({})'.format(mdl1_id), cout.getvalue())
+            # unknowm class argument
+            clear_stream(cout)
+            cons.onecmd('all fgkl')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
 
     def test_do_create(self):
         """Tests the do_create function of the HBNBCommand class.
@@ -140,44 +153,6 @@ class TestHBNBCommand(unittest.TestCase):
             )
             reset_store(storage)
 
-    def test_do_show(self):
-        """Tests the do_show function of the HBNBCommand class.
-        """
-        with patch('sys.stdout', new=StringIO()) as cout:
-            cons = HBNBCommand()
-            reset_store(storage)
-            # no arguments
-            cons.onecmd('show')
-            self.assertEqual(cout.getvalue(), "** class name missing **\n")
-            # unknown class
-            clear_stream(cout)
-            cons.onecmd('show root')
-            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
-            # unknown class with valid instance id
-            clear_stream(cout)
-            cons.onecmd('create User')
-            mdl_id = cout.getvalue().strip()
-            clear_stream(cout)
-            cons.onecmd('show voot {}'.format(mdl_id))
-            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
-            self.assertIn('User.{}'.format(mdl_id), storage.all())
-            # known class with no instance id
-            clear_stream(cout)
-            cons.onecmd('show User')
-            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
-            self.assertIn('User.{}'.format(mdl_id), storage.all())
-            # known class with unknown instance id
-            clear_stream(cout)
-            cons.onecmd('show User 444')
-            self.assertEqual(cout.getvalue(), "** no instance found **\n")
-            self.assertIn('User.{}'.format(mdl_id), storage.all())
-            # known class with valid instance id
-            clear_stream(cout)
-            self.assertIn('User.{}'.format(mdl_id), storage.all())
-            cons.onecmd('show User {}'.format(mdl_id))
-            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
-            self.assertIn('User.{}'.format(mdl_id), storage.all())
-
     def test_do_destroy(self):
         """Tests the do_destroy function of the HBNBCommand class.
         """
@@ -216,29 +191,98 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertNotIn('User.{}'.format(mdl_id), storage.all())
             self.assertEqual(cout.getvalue().strip(), "")
 
-    def test_do_all(self):
-        """Tests the do_all function of the HBNBCommand class.
+    def test_do_help(self):
+        """Tests the do_help function of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            cons.onecmd('help')
+            self.assertNotEqual(cout.getvalue().strip(), '')
+            # the help commands aren't empty
+            clear_stream(cout)
+            cons.onecmd('help create')
+            self.assertNotEqual(cout.getvalue().strip(), '')
+            clear_stream(cout)
+            cons.onecmd('help quit')
+            self.assertNotEqual(cout.getvalue().strip(), '')
+            clear_stream(cout)
+            cons.onecmd('help all')
+            self.assertNotEqual(cout.getvalue().strip(), '')
+            clear_stream(cout)
+            cons.onecmd('help show')
+            self.assertNotEqual(cout.getvalue().strip(), '')
+
+    def test_do_quit(self):
+        """Tests the do_quit function of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
             reset_store(storage)
             # no arguments
-            cons.onecmd('create Amenity')
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('quit')
+            self.assertEqual(cout.getvalue().strip(), '')
+            self.assertEqual(ex.exception.code, 0)
+            # arguments
+            clear_stream(cout)
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('quit 5')
+            self.assertEqual(cout.getvalue().strip(), '')
+            self.assertEqual(ex.exception.code, 0)
+            # commands before quit
+            clear_stream(cout)
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('ls')
+                cons.onecmd('quit')
+            self.assertEqual(cout.getvalue(), '*** Unknown syntax: ls\n')
+            self.assertEqual(ex.exception.code, 0)
+            # commands after quit
+            clear_stream(cout)
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('quit')
+                cons.onecmd('ls')
+            self.assertEqual(cout.getvalue().strip(), '')
+            self.assertEqual(cons.lastcmd, 'quit')
+            self.assertEqual(ex.exception.code, 0)
+
+    def test_do_show(self):
+        """Tests the do_show function of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # no arguments
+            cons.onecmd('show')
+            self.assertEqual(cout.getvalue(), "** class name missing **\n")
+            # unknown class
+            clear_stream(cout)
+            cons.onecmd('show root')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            # unknown class with valid instance id
+            clear_stream(cout)
+            cons.onecmd('create User')
             mdl_id = cout.getvalue().strip()
             clear_stream(cout)
-            cons.onecmd('all')
-            self.assertIn('[Amenity] ({})'.format(mdl_id), cout.getvalue())
-            # valid class argument
-            cons.onecmd('create State')
-            mdl1_id = cout.getvalue().strip()
-            clear_stream(cout)
-            cons.onecmd('all Amenity')
-            self.assertIn('[Amenity] ({})'.format(mdl_id), cout.getvalue())
-            self.assertNotIn('[State] ({})'.format(mdl1_id), cout.getvalue())
-            # unknowm class argument
-            clear_stream(cout)
-            cons.onecmd('all fgkl')
+            cons.onecmd('show voot {}'.format(mdl_id))
             self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with no instance id
+            clear_stream(cout)
+            cons.onecmd('show User')
+            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with unknown instance id
+            clear_stream(cout)
+            cons.onecmd('show User 444')
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with valid instance id
+            clear_stream(cout)
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            cons.onecmd('show User {}'.format(mdl_id))
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
 
     def test_do_update(self):
         """Tests the do_update function of the HBNBCommand class.
@@ -347,32 +391,6 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(cout.getvalue(), "2\n")
             self.assertTrue(int(cout.getvalue()) >= 0)
 
-    def test_cls_show(self):
-        """Tests the show class action of the HBNBCommand class.
-        """
-        with patch('sys.stdout', new=StringIO()) as cout:
-            cons = HBNBCommand()
-            reset_store(storage)
-            self.assertEqual(len(storage.all()), 0)
-            # no id argument
-            cmd_line = cons.precmd('User.show()')
-            cons.onecmd(cmd_line)
-            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
-            # invalid id argument
-            clear_stream(cout)
-            cmd_line = cons.precmd('User.show(34)')
-            cons.onecmd(cmd_line)
-            self.assertEqual(cout.getvalue(), "** no instance found **\n")
-            # creating objects and showing them
-            clear_stream(cout)
-            cons.onecmd('create User')
-            mdl_id = cout.getvalue().strip()
-            clear_stream(cout)
-            cmd_line = cons.precmd('User.show("{}")'.format(mdl_id))
-            cons.onecmd(cmd_line)
-            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
-            self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
-
     def test_cls_destroy(self):
         """Tests the destroy class action of the HBNBCommand class.
         """
@@ -398,6 +416,32 @@ class TestHBNBCommand(unittest.TestCase):
             cmd_line = cons.precmd('User.destroy("{}")'.format(mdl_id))
             cons.onecmd(cmd_line)
             self.assertNotIn('User.{}'.format(mdl_id), storage.all().keys())
+
+    def test_cls_show(self):
+        """Tests the show class action of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            self.assertEqual(len(storage.all()), 0)
+            # no id argument
+            cmd_line = cons.precmd('User.show()')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
+            # invalid id argument
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.show(34)')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            # creating objects and showing them
+            clear_stream(cout)
+            cons.onecmd('create User')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.show("{}")'.format(mdl_id))
+            cons.onecmd(cmd_line)
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
+            self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
 
     def test_cls_update(self):
         """Tests the update class action of the HBNBCommand class.
