@@ -25,6 +25,7 @@ class HBNBCommand(cmd.Cmd):
 
         Args:
             line (str): The line of command to be transformed.
+
         Returns:
             str: The next line of command to execute.
         """
@@ -44,11 +45,7 @@ class HBNBCommand(cmd.Cmd):
             args = None
             cmd_line_parts = []
             try:
-                if len(args_txt) == 0:
-                    args = tuple()
-                else:
-                    e = '' if args_txt.endswith(',') else ','
-                    args = eval('({}{})'.format(args_txt, e))
+                args = self.split_func_args(args_txt)
                 cmd_line_parts.append(command_name)
                 cmd_line_parts.append(class_name)
                 for arg in args:
@@ -72,6 +69,63 @@ class HBNBCommand(cmd.Cmd):
         if not sys.__stdin__.isatty():
             print('(hbnb) ', end='')
         return stop
+
+    def split_func_args(self, args_txt):
+        """Splits a function argument section into its arguments.
+
+        Args:
+            args_txt (str): The function argument section.
+
+        Returns:
+            list: The list of arguments.
+        """
+        txt = args_txt.strip()
+        quote = None
+        brace = None
+        brace_d = 0
+        a = 0
+        char_p = None
+        pushed_a = False
+        parts = []
+        n = len(txt)
+        for i in range(n):
+
+            if txt[i] == ',':
+                if (quote is None) and (brace is None):
+                    if not pushed_a:
+                        parts.append(txt[a:i])
+                    else:
+                        pushed_a = False
+                    a = i + 1
+            elif (txt[i] == '{') and (quote is None):
+                if brace is None:
+                    brace = '{'
+                    a = i
+                brace_d += 1
+            elif (txt[i] == '}') and (quote is None):
+                if brace_d > 0:
+                    brace_d -= 1
+                if brace_d == 0:
+                    parts.append(txt[a:i+1])
+                    pushed_a = True
+                    brace = None
+                    brace_d = 0
+                    a = i + 1
+            elif (txt[i] == '"') and (brace is None):
+                if (quote is None):
+                    quote = '"'
+                    a = i + 1
+                else:
+                    parts.append(txt[a:i])
+                    pushed_a = True
+                    quote = None
+                    a = i + 1
+            elif i == n - 1:
+                if not pushed_a:
+                    parts.append(txt[a: i if txt[i] == ',' else n])
+                    pushed_a = True
+        parts = list(map(lambda x: x.strip(), parts))
+        return parts
 
     def emptyline(self):
         """Executes some actions when the command line is empty.
