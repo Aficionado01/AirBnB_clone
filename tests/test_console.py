@@ -11,17 +11,15 @@ from unittest.mock import patch
 
 from console import HBNBCommand
 from models import storage
-# from models.base_model import BaseModel
-# from models.user import User
-# from models.state import State
-# from models.city import City
-# from models.amenity import Amenity
-# from models.place import Place
-# from models.review import Review
-# from models.engine.file_storage import FileStorage
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+from models.engine.file_storage import FileStorage
 from tests import (
-    # write_text_file,
-    # delete_file,
     reset_store,
     clear_stream
 )
@@ -71,6 +69,19 @@ class TestHBNBCommand(unittest.TestCase):
             clear_stream(cout)
             cons.onecmd('create Base')
             self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            clear_stream(cout)
+            cons.onecmd('create base')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            # valid class name
+            clear_stream(cout)
+            cons.onecmd('create BaseModel')
+            mdl_sid = 'BaseModel.{}'.format(cout.getvalue().strip())
+            self.assertTrue(mdl_sid in storage.all().keys())
+            self.assertTrue(type(storage.all()[mdl_sid]) is BaseModel)
+            with open('file.json', mode='r') as file:
+                json_obj = json.load(file)
+                self.assertTrue(type(json_obj) is dict)
+                self.assertTrue(mdl_sid in json_obj)
         # endregion
         # region The show command
         # endregion
@@ -87,7 +98,6 @@ class TestHBNBCommand(unittest.TestCase):
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
-            reset_store(storage)
             # creating a User instance
             cons.onecmd('create User')
             mdl_id = cout.getvalue().strip()
@@ -122,7 +132,6 @@ class TestHBNBCommand(unittest.TestCase):
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
-            reset_store(storage)
             # create a sample object and show it
             cons.onecmd('create City')
             mdl_id = cout.getvalue().strip()
@@ -136,8 +145,6 @@ class TestHBNBCommand(unittest.TestCase):
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
-            reset_store(storage)
-            self.assertEqual(len(storage.all()), 0)
             # no objects
             cmd_line = cons.precmd('User.count()')
             cons.onecmd(cmd_line)
@@ -156,7 +163,6 @@ class TestHBNBCommand(unittest.TestCase):
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
-            reset_store(storage)
             # create a sample object and show it
             cons.onecmd('create City')
             mdl_id = cout.getvalue().strip()
@@ -170,7 +176,6 @@ class TestHBNBCommand(unittest.TestCase):
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
-            reset_store(storage)
             # create a sample object and destroy it
             cons.onecmd('create City')
             mdl_id = cout.getvalue().strip()
@@ -186,7 +191,6 @@ class TestHBNBCommand(unittest.TestCase):
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
-            reset_store(storage)
             # create a sample object and update it
             cons.onecmd('create Place')
             mdl_id = cout.getvalue().strip()
@@ -207,7 +211,6 @@ class TestHBNBCommand(unittest.TestCase):
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
-            reset_store(storage)
             # create a sample object and update it
             cons.onecmd('create Amenity')
             mdl_id = cout.getvalue().strip()

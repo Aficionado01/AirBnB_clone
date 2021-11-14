@@ -31,6 +31,7 @@ class TestFileStorage(unittest.TestCase):
         """
         write_text_file('file.json', '{}')
         store = FileStorage()
+        store.reload()
         self.assertEqual(len(store.all()), 0)
         mdl = BaseModel()
         store.new(mdl)
