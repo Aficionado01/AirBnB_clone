@@ -332,8 +332,10 @@ class TestHBNBCommand(unittest.TestCase):
             cons = HBNBCommand()
             reset_store(storage)
             self.assertEqual(len(storage.all()), 0)
+            # no objects
             cons.precmd('User.count()')
             self.assertEqual(cout.getvalue(), "0\n")
+            # creating objects and counting them
             cons.onecmd('create User')
             cons.onecmd('create User')
             clear_stream(cout)
@@ -355,7 +357,7 @@ class TestHBNBCommand(unittest.TestCase):
             clear_stream(cout)
             cons.precmd('User.show(34)')
             self.assertEqual(cout.getvalue(), "** no instance found **\n")
-            # creating objects and printing them
+            # creating objects and showing them
             clear_stream(cout)
             cons.onecmd('create User')
             mdl_id = cout.getvalue().strip()
@@ -367,7 +369,25 @@ class TestHBNBCommand(unittest.TestCase):
     def test_cls_destroy(self):
         """Tests the destroy class action of the HBNBCommand class.
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            self.assertEqual(len(storage.all()), 0)
+            # no id argument
+            cons.precmd('User.destroy()')
+            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
+            # invalid id argument
+            clear_stream(cout)
+            cons.precmd('User.destroy("fd34-3e5a")')
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            # creating objects and destroying them
+            clear_stream(cout)
+            cons.onecmd('create User')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
+            cons.precmd('User.destroy("{}")'.format(mdl_id))
+            self.assertNotIn('User.{}'.format(mdl_id), storage.all().keys())
 
     # def test_cls_update(self):
     #     """Tests the update class action of the HBNBCommand class.
