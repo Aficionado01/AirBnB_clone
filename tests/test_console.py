@@ -81,6 +81,42 @@ class TestHBNBCommand(unittest.TestCase):
         # region The update command
         # endregion
 
+    def test_user(self):
+        """Tests the show, create, destroy, update, and all
+        commands with a User model.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # creating a User instance
+            cons.onecmd('create User')
+            mdl_id = cout.getvalue().strip()
+            # showing a User instance
+            clear_stream(cout)
+            cons.onecmd('show User {}'.format(mdl_id))
+            self.assertIn(mdl_id, cout.getvalue())
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
+            # showing all User instances
+            clear_stream(cout)
+            cons.onecmd('all User')
+            self.assertIn(mdl_id, cout.getvalue())
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
+            # updating a User instance
+            clear_stream(cout)
+            cons.onecmd('update User {} first_name Akpanoko'.format(mdl_id))
+            cons.onecmd('show User {}'.format(mdl_id))
+            self.assertIn(mdl_id, cout.getvalue())
+            self.assertIn(
+                "'first_name': 'Akpanoko'".format(mdl_id),
+                cout.getvalue()
+            )
+            # destroying a User instance
+            clear_stream(cout)
+            cons.onecmd('destroy User {}'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), '')
+            cons.onecmd('show User {}'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), '** no instance found **\n')
+
     def test_class_all(self):
         """Tests the ClassName.all() feature.
         """
