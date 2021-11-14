@@ -52,6 +52,18 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('  ')
             self.assertEqual(cout.getvalue(), '*** Unknown syntax: ls\n')
 
+    def test_do_help(self):
+        """Tests the do_help function of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            cons.onecmd('help')
+            self.assertNotEqual(cout.getvalue().strip(), '')
+            clear_stream(cout)
+            cons.onecmd('help create')
+            self.assertNotEqual(cout.getvalue().strip(), '')
+
     def test_do_create(self):
         """Tests the do_create function of the HBNBCommand class.
         """
@@ -96,6 +108,31 @@ class TestHBNBCommand(unittest.TestCase):
             )
             reset_store(storage)
 
+    # def test_do_show(self):
+    #     """Tests the do_show function of the HBNBCommand class.
+    #     """
+    #     pass
+
+    # def test_do_destroy(self):
+    #     """Tests the do_destroy function of the HBNBCommand class.
+    #     """
+    #     pass
+
+    # def test_do_all(self):
+    #     """Tests the do_all function of the HBNBCommand class.
+    #     """
+    #     pass
+
+    # def test_do_update(self):
+    #     """Tests the do_update function of the HBNBCommand class.
+    #     """
+    #     pass
+
+    # def test_cls_all(self):
+    #     """Tests the all class action of the HBNBCommand class.
+    #     """
+    #     pass
+
     def test_cls_count(self):
         """Tests the count class action of the HBNBCommand class.
         """
@@ -110,3 +147,18 @@ class TestHBNBCommand(unittest.TestCase):
             clear_stream(cout)
             cons.precmd('User.count()')
             self.assertEqual(cout.getvalue(), "2\n")
+            self.assertTrue(int(cout.getvalue()) >= 0)
+
+    # def test_cls_show(self):
+    #     """Tests the show class action of the HBNBCommand class.
+    #     """
+    #     pass
+
+    def test_cls_destroy(self):
+        """Tests the destroy class action of the HBNBCommand class.
+        """
+        pass
+
+    # def test_cls_update(self):
+    #     """Tests the update class action of the HBNBCommand class.
+    #     """
