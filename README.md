@@ -19,42 +19,33 @@ The command interpreter can be started by running `./console.py` in your termina
 
 ### Supported Commands
 
-These are commands that can be executed by the command interpreter. They have the format `command [argument]...`.
+These are commands that can be executed by the command interpreter. They have the format `command [argument]...` but you could also use the format `ClassName.command([argument]...)`..
 
 | Format | Description |
 |:-|:-|
-| `help [command]` | Prints helpful information about a command (`command`). Default command: _help_. |
+| `help [command]` | Prints helpful information about a command (`command`). If `command` is not provided, it prints the help menu. |
 | `quit` | Closes the command interpreter. |
 | `EOF` | Closes the command interpreter. |
 | `create ClassName` | Creates a new instance of the `ClassName` class. |
-| `show ClassName id` | Prints the string representation of an instance of the `ClassName` class with id `id`. |
-| `destroy ClassName id` | Deletes an instance of the `ClassName` class with id `id`. |
-| `all [ClassName]` | Prints a list of the string representation of all instances of the `ClassName` class. Default class name: `BaseModel`. |
-| `update ClassName id attr_name attr_value` | Updates an instance of the `ClassName` class with id `id` by assigning the attribute value `attr_value` to its attribute named `attr_name`. Attributes having the names `id`, `created_at`, and `updated_at` are silently ignored. Only simple arguments like _integers_, _floats_, and _strings_ are supported. |
+| `count ClassName` | Prints the number of instances of the `ClassName` class. |
+| `show ClassName id` | Prints the string representation of an instance of the `ClassName` class with the given `id`. |
+| `destroy ClassName id` | Deletes an instance of the `ClassName` class with the given `id`. |
+| `all [ClassName]` | Prints a list containing the string representation of all instances of the `ClassName` class. `ClassName` is optional and if it isn't provided, all the availble objects are printed. |
+| `update ClassName id attr_name attr_value` | Updates an instance of the `ClassName` class with the given `id` by assigning the attribute value `attr_value` to its attribute named `attr_name`. Attributes having the names `__class__`, `id`, `created_at`, and `updated_at` are silently ignored. |
+| `update ClassName id dict_repr` | Updates an instance of `ClassName` having the given `id` by storing the key, value pairs in the given `dict_repr` dictionary as its attributes. The keys `__class__`, `id`, `created_at`, and `updated_at` are silently ignored. |
 
-### Class-Based Actions
+### Supported Models
 
-These are actions that are performed based on a given class. They have the format `ClassName.action([argument]...)`.
-
-| Format | Description |
-|:-|:-|
-| `ClassName.all()` | Retrieves all objects that are instances of `ClassName`. |
-| `ClassName.count()` | Retrieves the number of objects that are instances of `ClassName`. |
-| `ClassName.show(id)` | Retrieves an object that is an instance of `ClassName` with the given `id`. |
-| `ClassName.destroy(id)` | Removes an object that is an instance of `ClassName` with the given `id`. |
-| `ClassName.update(id, attr_name, attr_value)` | Updates an object that is an instance of `ClassName` with the given `id`. Updates to `id`, `created_at`, and `updated_at` are ignored silently. |
-| `ClassName.update(id, dict_repr)` | Updates an object that is an instance of `ClassName` with the key, value pairs in the given `dict_repr` dictionary. Updates to `id`, `created_at`, and `updated_at` are ignored silently. |
-
-### Supported Data Sets
+These are the models that are currently available.
 
 | Class | Description |
 |:-|:-|
-| BaseModel | Represents the base class for all data set models (All data set models are instances of this class). |
+| BaseModel | Represents the base class for all models (all models are instances of this class). |
 | User | Represents a user account for this project. |
 | State | Represents the geographical state in which a _User_ lives. |
 | City | Represents an urban area in a _State_. |
 | Amenity | Represents a useful feature of a _Place_. |
-| Place | Represents a building that a _User_ can rent. |
+| Place | Represents a building containing rooms that can be rented by a _User_. |
 | Review | Represents a review of a _Place_. |
 
 ### Examples
@@ -65,7 +56,7 @@ b3zaleel@BOCI-PC ~/AirBnB_clone (main)> ./console.py
 
 Documented commands (type help <topic>):
 ========================================
-EOF  all  create  destroy  help  quit  show  update
+EOF  all  count  create  destroy  help  quit  show  update
 
 (hbnb) all Base
 ** class doesn't exist **
