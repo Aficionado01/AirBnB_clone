@@ -55,7 +55,6 @@ class TestHBNBCommand(unittest.TestCase):
     def test_do_create(self):
         """Tests the do_create function of the HBNBCommand class.
         """
-        delete_file('file.json')
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
             reset_store(storage)
@@ -96,3 +95,18 @@ class TestHBNBCommand(unittest.TestCase):
                 storage.all()
             )
             reset_store(storage)
+
+    def test_cls_count(self):
+        """Tests the count class action of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            self.assertEqual(len(storage.all()), 0)
+            cons.precmd('User.count()')
+            self.assertEqual(cout.getvalue(), "0\n")
+            cons.onecmd('create User')
+            cons.onecmd('create User')
+            clear_stream(cout)
+            cons.precmd('User.count()')
+            self.assertEqual(cout.getvalue(), "2\n")
