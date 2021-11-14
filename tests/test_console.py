@@ -81,6 +81,20 @@ class TestHBNBCommand(unittest.TestCase):
         # region The update command
         # endregion
 
+    def test_class_all(self):
+        """Tests the ClassName.all() feature.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # create a sample object and show it
+            cons.onecmd('create City')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cmd_line = cons.precmd('City.all({})'.format(mdl_id))
+            cons.onecmd(cmd_line)
+            self.assertIn(mdl_id, cout.getvalue())
+
     def test_class_count(self):
         """Tests the ClassName.count() feature.
         """
