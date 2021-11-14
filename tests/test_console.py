@@ -53,3 +53,49 @@ class TestHBNBCommand(unittest.TestCase):
             clear_stream(cout)
             cons.onecmd('help quit')
             self.assertNotEqual(cout.getvalue().strip(), '')
+
+    def test_console_v_0_1(self):
+        """Tests the features of version 0.1 of the console.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            if os.path.isfile('file.json'):
+                os.unlink('file.json')
+        # region The create command
+            # missing class name
+            clear_stream(cout)
+            cons.onecmd('create')
+            self.assertEqual(cout.getvalue(), "** class name missing **\n")
+            # invalid class name
+            clear_stream(cout)
+            cons.onecmd('create Base')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+        # endregion
+        # region The show command
+        # endregion
+        # region The destroy command
+        # endregion
+        # region The all command
+        # endregion
+        # region The update command
+        # endregion
+
+    def test_class_count(self):
+        """Tests the ClassName.count() feature.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            self.assertEqual(len(storage.all()), 0)
+            # no objects
+            cmd_line = cons.precmd('User.count()')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "0\n")
+            # creating objects and counting them
+            cons.onecmd('create User')
+            cons.onecmd('create User')
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.count()')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "2\n")
+            # self.assertTrue(int(cout.getvalue()) >= 0)
