@@ -301,10 +301,29 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertIn("'age': '34'".format(mdl_id), cout.getvalue())
             self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
 
-    # def test_cls_all(self):
-    #     """Tests the all class action of the HBNBCommand class.
-    #     """
-    #     pass
+    def test_cls_all(self):
+        """Tests the all class action of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            self.assertEqual(len(storage.all()), 0)
+            # no objects
+            cons.precmd('User.all()')
+            self.assertEqual(cout.getvalue(), "[]\n")
+            # creating objects and printing them
+            clear_stream(cout)
+            cons.onecmd('create User')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.onecmd('create User')
+            mdl_id1 = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.precmd('User.all()')
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
+            self.assertIn('[User] ({})'.format(mdl_id1), cout.getvalue())
+            self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
+            self.assertIn('User.{}'.format(mdl_id1), storage.all().keys())
 
     def test_cls_count(self):
         """Tests the count class action of the HBNBCommand class.
