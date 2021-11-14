@@ -51,6 +51,13 @@ class TestHBNBCommand(unittest.TestCase):
             clear_stream(cout)
             cons.onecmd('help quit')
             self.assertNotEqual(cout.getvalue().strip(), '')
+            clear_stream(cout)
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('EOF')
+            self.assertEqual(ex.exception.code, 0)
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('quit')
+            self.assertEqual(ex.exception.code, 0)
 
     # TODO: Write tests for this feature
     def test_console_v_0_1(self):
