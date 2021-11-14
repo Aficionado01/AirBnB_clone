@@ -101,6 +101,20 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(cout.getvalue(), "2\n")
             self.assertTrue(int(cout.getvalue()) >= 0)
 
+    def test_class_show(self):
+        """Tests the ClassName.show(id) feature.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # create a sample object and show it
+            cons.onecmd('create City')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cmd_line = cons.precmd('City.show({})'.format(mdl_id))
+            cons.onecmd(cmd_line)
+            self.assertIn(mdl_id, cout.getvalue())
+
     def test_class_destroy(self):
         """Tests the ClassName.destroy(id) feature.
         """
@@ -111,9 +125,7 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('create City')
             mdl_id = cout.getvalue().strip()
             clear_stream(cout)
-            cmd_line = cons.precmd(
-                'City.destroy({})'.format(mdl_id)
-            )
+            cmd_line = cons.precmd('City.destroy({})'.format(mdl_id))
             cons.onecmd(cmd_line)
             clear_stream(cout)
             cons.onecmd('show City {}'.format(mdl_id))
