@@ -116,6 +116,40 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertIn('[Amenity] ({})'.format(mdl_id1), cout.getvalue())
         # endregion
         # region The update command
+            # missing instance id
+            clear_stream(cout)
+            cons.onecmd('update BaseModel')
+            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
+            # invalid instance id
+            clear_stream(cout)
+            cons.onecmd('update BaseModel 49faff9a-451f-87b6-910505c55907')
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            # missing attribute name
+            clear_stream(cout)
+            cons.onecmd('create BaseModel')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.onecmd('update BaseModel {}'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), "** attribute name missing **\n")
+            # missing attribute value
+            clear_stream(cout)
+            cons.onecmd('update BaseModel {} first_name'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), "** value missing **\n")
+            # missing attribute value
+            clear_stream(cout)
+            if os.path.isfile('file.json'):
+                os.unlink('file.json')
+            self.assertFalse(os.path.isfile('file.json'))
+            cons.onecmd('update BaseModel {} first_name Chris'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), "")
+            mdl_sid = 'BaseModel.{}'.format(mdl_id)
+            self.assertTrue(mdl_sid in storage.all().keys())
+            self.assertTrue(os.path.isfile('file.json'))
+            self.assertTrue(hasattr(storage.all()[mdl_sid], 'first_name'))
+            self.assertEqual(
+                getattr(storage.all()[mdl_sid], 'first_name', ''),
+                'Chris'
+            )
         # endregion
 
     def test_user(self):
