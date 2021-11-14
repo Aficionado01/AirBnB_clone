@@ -54,6 +54,7 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('help quit')
             self.assertNotEqual(cout.getvalue().strip(), '')
 
+    # TODO: Write tests for this feature
     def test_console_v_0_1(self):
         """Tests the features of version 0.1 of the console.
         """
@@ -98,4 +99,25 @@ class TestHBNBCommand(unittest.TestCase):
             cmd_line = cons.precmd('User.count()')
             cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "2\n")
-            # self.assertTrue(int(cout.getvalue()) >= 0)
+            self.assertTrue(int(cout.getvalue()) >= 0)
+
+    def test_class_update_1(self):
+        """Tests the ClassName.update(id, attr_name, attr_value) feature.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # create a sample object and update it
+            cons.onecmd('create Amenity')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cmd_line = cons.precmd(
+                'Amenity.update({}, '.format(mdl_id) +
+                "{'name': 'Basketball court'}"
+            )
+            cons.onecmd(cmd_line)
+            cons.onecmd('show Amenity')
+            self.assertIn(
+                "'name': 'Basketball court'",
+                cout.getvalue()
+            )
