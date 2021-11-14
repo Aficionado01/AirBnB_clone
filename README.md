@@ -1,4 +1,4 @@
-# AirBnB Clone
+# AirBnB Clone - The Console
 
 ![Repo size](https://img.shields.io/github/repo-size/B3zaleel/AirBnB_clone)
 ![Code size](https://img.shields.io/github/languages/code-size/B3zaleel/AirBnB_clone.svg)
@@ -7,7 +7,7 @@
 
 ## Description
 
-This project is the first part of an **AirBnB** clone web project that supports the serialization and deserialization of simple data sets using a simple file storage. The data sets are serialized to a JSON file format for the purpose of simplicity. This project supports a simple console-based command interpreter for managing the supported data sets ([more below](#supported-data-sets)).
+This project is the first part of an **AirBnB** clone web project that supports the serialization and deserialization of simple data sets using a simple file storage mechanism. The data sets are serialized to a JSON file format for the purpose of simplicity. This project also supports a simple console-based command interpreter for managing the supported data sets ([more below](#supported-data-sets)).
 
 ## The Command Interpreter
 

@@ -64,10 +64,37 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('help create')
             self.assertNotEqual(cout.getvalue().strip(), '')
 
-    # def test_do_quit(self):
-    #     """Tests the do_quit function of the HBNBCommand class.
-    #     """
-    #     pass
+    def test_do_quit(self):
+        """Tests the do_quit function of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # no arguments
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('quit')
+            self.assertEqual(cout.getvalue().strip(), '')
+            self.assertEqual(ex.exception.code, 0)
+            # arguments
+            clear_stream(cout)
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('quit 5')
+            self.assertEqual(cout.getvalue().strip(), '')
+            self.assertEqual(ex.exception.code, 0)
+            # commands before quit
+            clear_stream(cout)
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('ls')
+                cons.onecmd('quit')
+            self.assertEqual(cout.getvalue(), '*** Unknown syntax: ls\n')
+            self.assertEqual(ex.exception.code, 0)
+            # commands after quit
+            clear_stream(cout)
+            with self.assertRaises(SystemExit) as ex:
+                cons.onecmd('quit')
+                cons.onecmd('ls')
+            self.assertEqual(cout.getvalue().strip(), '')
+            self.assertEqual(ex.exception.code, 0)
 
     def test_do_create(self):
         """Tests the do_create function of the HBNBCommand class.
