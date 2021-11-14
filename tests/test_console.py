@@ -213,10 +213,66 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('all fgkl')
             self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
 
-    # def test_do_update(self):
-    #     """Tests the do_update function of the HBNBCommand class.
-    #     """
-    #     pass
+    def test_do_update(self):
+        """Tests the do_update function of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # no arguments
+            cons.onecmd('update')
+            self.assertEqual(cout.getvalue(), "** class name missing **\n")
+            # unknown class
+            clear_stream(cout)
+            cons.onecmd('update voot')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            # unknown class with valid instance id
+            clear_stream(cout)
+            cons.onecmd('create User')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.onecmd('update voot {}'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with no instance id
+            clear_stream(cout)
+            cons.onecmd('update User')
+            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with unknown instance id
+            clear_stream(cout)
+            cons.onecmd('update User 444')
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with unknown instance id and valid attribute
+            clear_stream(cout)
+            cons.onecmd('update User 444 age')
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class, unknown instance id, valid attribute name and value
+            clear_stream(cout)
+            cons.onecmd('update User 444 age 34')
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class, known instance id, no attribute name, no value
+            clear_stream(cout)
+            cons.onecmd('update User {}'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), "** attribute name missing **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class, known instance id, valid attribute name, no value
+            clear_stream(cout)
+            cons.onecmd('update User {} age'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), "** value missing **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class, known instance id, valid attribute name, and value
+            clear_stream(cout)
+            cons.onecmd('update User {} age 34'.format(mdl_id))
+            self.assertEqual(cout.getvalue().strip(), "")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            clear_stream(cout)
+            cons.onecmd('show User {}'.format(mdl_id))
+            self.assertIn("'age': '34'".format(mdl_id), cout.getvalue())
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
 
     # def test_cls_all(self):
     #     """Tests the all class action of the HBNBCommand class.
