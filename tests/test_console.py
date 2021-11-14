@@ -101,6 +101,24 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(cout.getvalue(), "2\n")
             self.assertTrue(int(cout.getvalue()) >= 0)
 
+    def test_class_destroy(self):
+        """Tests the ClassName.destroy(id) feature.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # create a sample object and destroy it
+            cons.onecmd('create City')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cmd_line = cons.precmd(
+                'City.destroy({})'.format(mdl_id)
+            )
+            cons.onecmd(cmd_line)
+            clear_stream(cout)
+            cons.onecmd('show City {}'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+
     def test_class_update_0(self):
         """Tests the ClassName.update(id, attr_name, attr_value) feature.
         """
