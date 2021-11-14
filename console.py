@@ -15,7 +15,7 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.stdin.isatty() else ''
 
     def preloop(self):
-        """Performs the preloop routine.
+        """Runs some actions before the console's loop begins.
         """
         if not sys.__stdin__.isatty():
             print('(hbnb)')
@@ -24,13 +24,13 @@ class HBNBCommand(cmd.Cmd):
         """Runs some actions before a line of command is executed.
 
         Args:
-            line (str): The line of command to be executed.
+            line (str): The line of command to be transformed.
         Returns:
             str: The next line of command to execute.
         """
         patterns = (
             r'(?P<class>[a-zA-Z]+)',
-            r'(?P<action>[a-zA-Z]+)',
+            r'(?P<command>[a-zA-Z]+)',
             r'(?P<args_txt>.*)',
         )
         cls_fxn_fmt = r'{}\s*\.\s*{}\s*\({}\)'.format(
@@ -39,7 +39,7 @@ class HBNBCommand(cmd.Cmd):
         cls_fxn_match = re.fullmatch(cls_fxn_fmt, line)
         if cls_fxn_match is not None:
             class_name = cls_fxn_match.group('class')
-            action_name = cls_fxn_match.group('action')
+            command_name = cls_fxn_match.group('command')
             args_txt = cls_fxn_match.group('args_txt').strip()
             args = None
             cmd_line_parts = []
@@ -49,16 +49,10 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     e = '' if args_txt.endswith(',') else ','
                     args = eval('({}{})'.format(args_txt, e))
-                cmd_line_parts.append(action_name)
+                cmd_line_parts.append(command_name)
                 cmd_line_parts.append(class_name)
                 for arg in args:
                     cmd_line_parts.append('"{}"'.format(arg))
-                    # if type(arg) is str:
-                    # elif type(arg) is dict:
-                    #     arg_s = str(arg).replace('"', "'")
-                    #     cmd_line_parts.append('"{}"'.format(arg_s))
-                    # else:
-                    #     cmd_line_parts.append(arg)
                 return ' '.join(cmd_line_parts)
             except Exception:
                 return line
@@ -66,7 +60,14 @@ class HBNBCommand(cmd.Cmd):
             return line
 
     def postcmd(self, stop, line):
-        """Performs the postcmd routine.
+        """Runs some actions after a line of command is executed.
+
+        Args:
+            stop (bool): The continuation condition.
+            line (str): The line of command that was executed.
+
+        Returns:
+            bool: The continuation condition.
         """
         if not sys.__stdin__.isatty():
             print('(hbnb) ', end='')
@@ -81,14 +82,14 @@ class HBNBCommand(cmd.Cmd):
         return False
 
     def do_EOF(self, line):
-        """The EOF command.
+        """Exits the console.
         Usage: EOF
         """
         exit(0)
 
     def do_all(self, line):
-        """The all command.
-        Usage: all [<class_name>]
+        """Prints all instances of a class or all classes.
+        Usage: all [<class name>]
         """
         args = shlex.split(line)
         class_name = args[0] if len(args) >= 1 else ''
@@ -104,7 +105,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_count(self, line):
-        """The count command.
+        """Prints the number of instances of a class.
         Usage: count <class name>
         """
         args = shlex.split(line)
@@ -122,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_create(self, line):
-        """The create command.
+        """Creates a new instance of a class.
         Usage: create <class name>
         """
         args = shlex.split(line)
@@ -138,7 +139,7 @@ class HBNBCommand(cmd.Cmd):
         print(new_obj.id)
 
     def do_destroy(self, line):
-        """The delete command.
+        """Removes an instance of a class with a given id.
         Usage: destroy <class name> <id>
         """
         args = shlex.split(line)
@@ -166,13 +167,13 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_quit(self, line):
-        """The quit command.
+        """Exits the console.
         Usage: quit
         """
         exit(0)
 
     def do_show(self, line):
-        """The show command.
+        """Prints an instance of a class with a given id.
         Usage: show <class name> <id>
         """
         args = shlex.split(line)
@@ -195,9 +196,9 @@ class HBNBCommand(cmd.Cmd):
         print("** no instance found **")
 
     def do_update(self, line):
-        """The update command.
-        Usage: update <class name> <id> <attribute_name> <attribute_value>
-            OR: update <class name> <id> <dict_representation>
+        """Updates an instance of a class with a given id.
+        Usage: update <class name> <id> <attribute name> <attribute value>
+               update <class name> <id> <dictionary representation>
         """
         args = shlex.split(line)
         ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
