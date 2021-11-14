@@ -64,6 +64,11 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('help create')
             self.assertNotEqual(cout.getvalue().strip(), '')
 
+    # def test_do_quit(self):
+    #     """Tests the do_quit function of the HBNBCommand class.
+    #     """
+    #     pass
+
     def test_do_create(self):
         """Tests the do_create function of the HBNBCommand class.
         """
@@ -151,10 +156,29 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertNotIn('User.{}'.format(mdl_id), storage.all())
             self.assertEqual(cout.getvalue().strip(), "")
 
-    # def test_do_all(self):
-    #     """Tests the do_all function of the HBNBCommand class.
-    #     """
-    #     pass
+    def test_do_all(self):
+        """Tests the do_all function of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # no arguments
+            cons.onecmd('create Amenity')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.onecmd('all')
+            self.assertIn('[Amenity] ({})'.format(mdl_id), cout.getvalue())
+            # valid class argument
+            cons.onecmd('create State')
+            mdl1_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.onecmd('all Amenity')
+            self.assertIn('[Amenity] ({})'.format(mdl_id), cout.getvalue())
+            self.assertNotIn('[State] ({})'.format(mdl1_id), cout.getvalue())
+            # unknowm class argument
+            clear_stream(cout)
+            cons.onecmd('all fgkl')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
 
     # def test_do_update(self):
     #     """Tests the do_update function of the HBNBCommand class.
