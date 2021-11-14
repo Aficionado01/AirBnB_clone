@@ -341,10 +341,28 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(cout.getvalue(), "2\n")
             self.assertTrue(int(cout.getvalue()) >= 0)
 
-    # def test_cls_show(self):
-    #     """Tests the show class action of the HBNBCommand class.
-    #     """
-    #     pass
+    def test_cls_show(self):
+        """Tests the show class action of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            self.assertEqual(len(storage.all()), 0)
+            # no id argument
+            cons.precmd('User.show()')
+            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
+            # invalid id argument
+            clear_stream(cout)
+            cons.precmd('User.show(34)')
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            # creating objects and printing them
+            clear_stream(cout)
+            cons.onecmd('create User')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.precmd('User.show("{}")'.format(mdl_id))
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
+            self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
 
     def test_cls_destroy(self):
         """Tests the destroy class action of the HBNBCommand class.
