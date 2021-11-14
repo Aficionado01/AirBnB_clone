@@ -346,7 +346,7 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
 
     def test_cls_all(self):
-        """Tests the all class action of the HBNBCommand class.
+        """Tests the all class command of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
@@ -372,7 +372,7 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertIn('User.{}'.format(mdl_id1), storage.all().keys())
 
     def test_cls_count(self):
-        """Tests the count class action of the HBNBCommand class.
+        """Tests the count class command of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
@@ -392,7 +392,7 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertTrue(int(cout.getvalue()) >= 0)
 
     def test_cls_destroy(self):
-        """Tests the destroy class action of the HBNBCommand class.
+        """Tests the destroy class command of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
@@ -407,18 +407,33 @@ class TestHBNBCommand(unittest.TestCase):
             cmd_line = cons.precmd('User.destroy("fd34-3e5a")')
             cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.destroy("foo")')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
             # creating objects and destroying them
             clear_stream(cout)
             cons.onecmd('create User')
             mdl_id = cout.getvalue().strip()
             clear_stream(cout)
+            cons.onecmd('create User')
+            mdl_id1 = cout.getvalue().strip()
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.count()')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue().strip(), '2')
+            clear_stream(cout)
             self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
             cmd_line = cons.precmd('User.destroy("{}")'.format(mdl_id))
             cons.onecmd(cmd_line)
             self.assertNotIn('User.{}'.format(mdl_id), storage.all().keys())
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.count()')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue().strip(), '1')
 
     def test_cls_show(self):
-        """Tests the show class action of the HBNBCommand class.
+        """Tests the show class command of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
@@ -433,6 +448,10 @@ class TestHBNBCommand(unittest.TestCase):
             cmd_line = cons.precmd('User.show(34)')
             cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.show("34")')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
             # creating objects and showing them
             clear_stream(cout)
             cons.onecmd('create User')
@@ -444,7 +463,7 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
 
     def test_cls_update(self):
-        """Tests the update class action of the HBNBCommand class.
+        """Tests the update class command of the HBNBCommand class.
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
