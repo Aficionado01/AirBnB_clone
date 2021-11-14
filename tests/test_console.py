@@ -309,7 +309,8 @@ class TestHBNBCommand(unittest.TestCase):
             reset_store(storage)
             self.assertEqual(len(storage.all()), 0)
             # no objects
-            cons.precmd('User.all()')
+            cmd_line = cons.precmd('User.all()')
+            cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "[]\n")
             # creating objects and printing them
             clear_stream(cout)
@@ -319,7 +320,8 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('create User')
             mdl_id1 = cout.getvalue().strip()
             clear_stream(cout)
-            cons.precmd('User.all()')
+            cmd_line = cons.precmd('User.all()')
+            cons.onecmd(cmd_line)
             self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
             self.assertIn('[User] ({})'.format(mdl_id1), cout.getvalue())
             self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
@@ -333,13 +335,15 @@ class TestHBNBCommand(unittest.TestCase):
             reset_store(storage)
             self.assertEqual(len(storage.all()), 0)
             # no objects
-            cons.precmd('User.count()')
+            cmd_line = cons.precmd('User.count()')
+            cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "0\n")
             # creating objects and counting them
             cons.onecmd('create User')
             cons.onecmd('create User')
             clear_stream(cout)
-            cons.precmd('User.count()')
+            cmd_line = cons.precmd('User.count()')
+            cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "2\n")
             self.assertTrue(int(cout.getvalue()) >= 0)
 
@@ -351,18 +355,21 @@ class TestHBNBCommand(unittest.TestCase):
             reset_store(storage)
             self.assertEqual(len(storage.all()), 0)
             # no id argument
-            cons.precmd('User.show()')
+            cmd_line = cons.precmd('User.show()')
+            cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "** instance id missing **\n")
             # invalid id argument
             clear_stream(cout)
-            cons.precmd('User.show(34)')
+            cmd_line = cons.precmd('User.show(34)')
+            cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "** no instance found **\n")
             # creating objects and showing them
             clear_stream(cout)
             cons.onecmd('create User')
             mdl_id = cout.getvalue().strip()
             clear_stream(cout)
-            cons.precmd('User.show("{}")'.format(mdl_id))
+            cmd_line = cons.precmd('User.show("{}")'.format(mdl_id))
+            cons.onecmd(cmd_line)
             self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
             self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
 
@@ -374,11 +381,13 @@ class TestHBNBCommand(unittest.TestCase):
             reset_store(storage)
             self.assertEqual(len(storage.all()), 0)
             # no id argument
-            cons.precmd('User.destroy()')
+            cmd_line = cons.precmd('User.destroy()')
+            cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "** instance id missing **\n")
             # invalid id argument
             clear_stream(cout)
-            cons.precmd('User.destroy("fd34-3e5a")')
+            cmd_line = cons.precmd('User.destroy("fd34-3e5a")')
+            cons.onecmd(cmd_line)
             self.assertEqual(cout.getvalue(), "** no instance found **\n")
             # creating objects and destroying them
             clear_stream(cout)
@@ -386,9 +395,67 @@ class TestHBNBCommand(unittest.TestCase):
             mdl_id = cout.getvalue().strip()
             clear_stream(cout)
             self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
-            cons.precmd('User.destroy("{}")'.format(mdl_id))
+            cmd_line = cons.precmd('User.destroy("{}")'.format(mdl_id))
+            cons.onecmd(cmd_line)
             self.assertNotIn('User.{}'.format(mdl_id), storage.all().keys())
 
-    # def test_cls_update(self):
-    #     """Tests the update class action of the HBNBCommand class.
-    #     """
+    def test_cls_update(self):
+        """Tests the update class action of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # create a sample object
+            cons.onecmd('create User')
+            mdl_id = cout.getvalue().strip()
+            # class with no instance id
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.update()')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all().keys())
+            # known class with unknown instance id
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.update("444")')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class and instance id, no attribute name
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.update("{}")'.format(mdl_id))
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** attribute name missing **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class, unknown instance id, valid attribute name
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.update("344", "age")')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class, unknown instance id, valid attribute name and value
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.update("344", "age", 27)')
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class, known instance id, valid attribute name, no value
+            clear_stream(cout)
+            cmd_line = cons.precmd(
+                'User.update("{}", "first_name")'.format(mdl_id)
+            )
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue(), "** value missing **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class, known instance id, valid attribute name, and value
+            clear_stream(cout)
+            cmd_line = cons.precmd(
+                'User.update("{}", "age", 27)'.format(mdl_id)
+            )
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue().strip(), "")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.show("{}")'.format(mdl_id))
+            cons.onecmd(cmd_line)
+            self.assertIn("'age': '27'".format(mdl_id), cout.getvalue())
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
