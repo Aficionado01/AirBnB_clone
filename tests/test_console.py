@@ -88,6 +88,32 @@ class TestHBNBCommand(unittest.TestCase):
         # region The destroy command
         # endregion
         # region The all command
+            # invalid class name
+            clear_stream(cout)
+            cons.onecmd('all Base')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            clear_stream(cout)
+            cons.onecmd('all base')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            # valid class name
+            clear_stream(cout)
+            cons.onecmd('create BaseModel')
+            mdl_id = cout.getvalue().strip()
+            mdl_sid = 'BaseModel.{}'.format(mdl_id)
+            clear_stream(cout)
+            cons.onecmd('create Amenity')
+            mdl_id1 = cout.getvalue().strip()
+            mdl_sid1 = 'Amenity.{}'.format(mdl_id1)
+            self.assertTrue(mdl_sid in storage.all().keys())
+            self.assertTrue(mdl_sid1 in storage.all().keys())
+            clear_stream(cout)
+            cons.onecmd('all BaseModel')
+            self.assertIn('[BaseModel] ({})'.format(mdl_id), cout.getvalue())
+            self.assertNotIn('[Amenity] ({})'.format(mdl_id1), cout.getvalue())
+            clear_stream(cout)
+            cons.onecmd('all')
+            self.assertIn('[BaseModel] ({})'.format(mdl_id), cout.getvalue())
+            self.assertIn('[Amenity] ({})'.format(mdl_id1), cout.getvalue())
         # endregion
         # region The update command
         # endregion
