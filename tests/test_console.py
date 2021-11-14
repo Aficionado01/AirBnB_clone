@@ -459,3 +459,20 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd(cmd_line)
             self.assertIn("'age': '27'".format(mdl_id), cout.getvalue())
             self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
+            # known class, known instance id, dictionary representation
+            clear_stream(cout)
+            cmd_line = cons.precmd(
+                'User.update("{}"'.format(mdl_id) +
+                ", {'bio': 'A kind soul'})"
+            )
+            cons.onecmd(cmd_line)
+            self.assertEqual(cout.getvalue().strip(), "")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            clear_stream(cout)
+            cmd_line = cons.precmd('User.show("{}")'.format(mdl_id))
+            cons.onecmd(cmd_line)
+            self.assertIn(
+                "'bio': 'A kind soul'".format(mdl_id),
+                cout.getvalue()
+            )
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
