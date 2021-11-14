@@ -101,8 +101,29 @@ class TestHBNBCommand(unittest.TestCase):
             self.assertEqual(cout.getvalue(), "2\n")
             self.assertTrue(int(cout.getvalue()) >= 0)
 
-    def test_class_update_1(self):
+    def test_class_update_0(self):
         """Tests the ClassName.update(id, attr_name, attr_value) feature.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # create a sample object and update it
+            cons.onecmd('create Place')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cmd_line = cons.precmd(
+                'Place.update({}, '.format(mdl_id) +
+                'name, "Rio de Janeiro")'
+            )
+            cons.onecmd(cmd_line)
+            cons.onecmd('show Place {}'.format(mdl_id))
+            self.assertIn(
+                "'name': 'Rio de Janeiro'",
+                cout.getvalue()
+            )
+
+    def test_class_update_1(self):
+        """Tests the ClassName.update(id, dict_repr) feature.
         """
         with patch('sys.stdout', new=StringIO()) as cout:
             cons = HBNBCommand()
@@ -113,10 +134,10 @@ class TestHBNBCommand(unittest.TestCase):
             clear_stream(cout)
             cmd_line = cons.precmd(
                 'Amenity.update({}, '.format(mdl_id) +
-                "{'name': 'Basketball court'}"
+                "{'name': 'Basketball court'})"
             )
             cons.onecmd(cmd_line)
-            cons.onecmd('show Amenity')
+            cons.onecmd('show Amenity {}'.format(mdl_id))
             self.assertIn(
                 "'name': 'Basketball court'",
                 cout.getvalue()
