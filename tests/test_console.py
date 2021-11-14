@@ -4,25 +4,13 @@
 import json
 import os
 import unittest
-from datetime import datetime
 from io import StringIO
-from typing import TextIO
 from unittest.mock import patch
 
 from console import HBNBCommand
 from models import storage
 from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-from models.engine.file_storage import FileStorage
-from tests import (
-    reset_store,
-    clear_stream
-)
+from tests import clear_stream
 
 
 class TestHBNBCommand(unittest.TestCase):
@@ -59,7 +47,6 @@ class TestHBNBCommand(unittest.TestCase):
                 cons.onecmd('quit')
             self.assertEqual(ex.exception.code, 0)
 
-    # TODO: Write tests for this feature
     def test_console_v_0_1(self):
         """Tests the features of version 0.1 of the console.
         """
