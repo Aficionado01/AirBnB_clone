@@ -113,10 +113,43 @@ class TestHBNBCommand(unittest.TestCase):
             )
             reset_store(storage)
 
-    # def test_do_show(self):
-    #     """Tests the do_show function of the HBNBCommand class.
-    #     """
-    #     pass
+    def test_do_show(self):
+        """Tests the do_show function of the HBNBCommand class.
+        """
+        with patch('sys.stdout', new=StringIO()) as cout:
+            cons = HBNBCommand()
+            reset_store(storage)
+            # no arguments
+            cons.onecmd('show')
+            self.assertEqual(cout.getvalue(), "** class name missing **\n")
+            # unknown class
+            clear_stream(cout)
+            cons.onecmd('show root')
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            # unknown class with valid instance id
+            clear_stream(cout)
+            cons.onecmd('create User')
+            mdl_id = cout.getvalue().strip()
+            clear_stream(cout)
+            cons.onecmd('show voot {}'.format(mdl_id))
+            self.assertEqual(cout.getvalue(), "** class doesn't exist **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with no instance id
+            clear_stream(cout)
+            cons.onecmd('show User')
+            self.assertEqual(cout.getvalue(), "** instance id missing **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with unknown instance id
+            clear_stream(cout)
+            cons.onecmd('show User 444')
+            self.assertEqual(cout.getvalue(), "** no instance found **\n")
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            # known class with valid instance id
+            clear_stream(cout)
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
+            cons.onecmd('show User {}'.format(mdl_id))
+            self.assertIn('[User] ({})'.format(mdl_id), cout.getvalue())
+            self.assertIn('User.{}'.format(mdl_id), storage.all())
 
     def test_do_destroy(self):
         """Tests the do_destroy function of the HBNBCommand class.
@@ -149,7 +182,7 @@ class TestHBNBCommand(unittest.TestCase):
             cons.onecmd('destroy User 444')
             self.assertEqual(cout.getvalue(), "** no instance found **\n")
             self.assertIn('User.{}'.format(mdl_id), storage.all())
-            # unknown class with valid instance id
+            # known class with valid instance id
             clear_stream(cout)
             self.assertIn('User.{}'.format(mdl_id), storage.all())
             cons.onecmd('destroy User {}'.format(mdl_id))
