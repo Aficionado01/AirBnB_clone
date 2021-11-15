@@ -11,11 +11,11 @@ This project is the first part of an **AirBnB** clone web project that supports 
 
 ## The Command Interpreter
 
-The command interpreter provides a simple REPL (Read-Evaluate-Print-Loop) for interacting with the models in this project only.
+The command interpreter provides a simple REPL (Read-Evaluate-Print-Loop) for interacting with the models in this project only. You can find some examples [here](#examples).
 
 ### How To Use
 
-The command interpreter can be started by running `./console.py` in your terminal. This would create an interactive REPL session which can be terminated by running `EOF` or `quit`. A non-interactive session exits after running the last command the interpreter received such as in `echo "all" | ./console.py`.
+You have to clone this repository to your system and change your working directory to the project's folder path on your system. The command interpreter can be started by running `./console.py` in your terminal. This would create an interactive REPL session which can be terminated by running `EOF` or `quit`. A non-interactive session exits after running the last command the interpreter received such as in `echo "all" | ./console.py`.
 
 ### Supported Commands
 
@@ -50,6 +50,8 @@ These are the models that are currently available.
 
 ### Examples
 
+#### Example 1
+
 ```powershell
 b3zaleel@BOCI-PC ~/AirBnB_clone (main)> ./console.py
 (hbnb) help
@@ -73,6 +75,29 @@ EOF  all  count  create  destroy  help  quit  show  update
 b3zaleel@BOCI-PC ~/AirBnB_clone (main)>
 ```
 
+#### Example 2
+
+```powershell
+➜  AirBnB_clone git:(main) ./console.py
+(hbnb) all User
+["[User] (9548fe03-7e73-44ac-b830-0baab40b0db1) {'id': '9548fe03-7e73-44ac-b830-0baab40b0db1', 'created_at': datetime.datetime(2021, 11, 15, 0, 54, 37, 591952), 'updated_at': datetime.datetime(2021, 11, 15, 0, 59, 46, 850405), 'age': '23'}"]
+(hbnb) User.count()
+1
+(hbnb) create User
+80f5df59-9464-4342-a401-8f65146a5d48
+(hbnb) User.destroy("9548fe03-7e73-44ac-b830-0baab40b0db1")
+(hbnb) all User
+["[User] (80f5df59-9464-4342-a401-8f65146a5d48) {'id': '80f5df59-9464-4342-a401-8f65146a5d48', 'created_at': datetime.datetime(2021, 11, 15, 1, 2, 57, 860397), 'updated_at': datetime.datetime(2021, 11, 15, 1, 2, 57, 860419)}"]
+(hbnb) show User 9548fe03-7e73-44ac-b830-0baab40b0db1
+** no instance found **
+(hbnb) create
+** class name missing **
+(hbnb) create fg
+** class doesn't exist **
+(hbnb) quit
+➜  AirBnB_clone git:(main)
+```
+
 ## Contributing
 
 We welcome any contribution to this project irrespective of the size. If you contribute to this project, please add your name to the [AUTHORS](AUTHORS) file. You should add your name whilst ensuring that the list of authors are in alphabetical order with the firstname provided first, an optional set of middle names, your last name, and your email address enclosed in angle brackets. An example is shown below.
@@ -81,4 +106,4 @@ We welcome any contribution to this project irrespective of the size. If you con
 John Doe <john_doe@dogemail.com>
 ```
 
-**NOTE:** Before you push any commit, please run the script `./test.sh` to ensure that no tests are failing.
+**NOTE:** Before you push any commit, please run the script `./test.sh` to ensure that no tests are failing and your code complies with this project's styling standard.
