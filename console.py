@@ -145,7 +145,12 @@ class HBNBCommand(cmd.Cmd):
         """Prints all instances of a class or all classes.
         Usage: all [<class name>]
         """
-        args = shlex.split(line)
+        args = []
+        try:
+            args = shlex.split(line)
+        except Exception:
+            print('*** Unknown syntax: {}'.format(line))
+            return
         class_name = args[0] if len(args) >= 1 else ''
         if (class_name in storage.model_classes.keys()) or (class_name == ''):
             all_class_objs = []
@@ -162,7 +167,12 @@ class HBNBCommand(cmd.Cmd):
         """Prints the number of instances of a class.
         Usage: count <class name>
         """
-        args = shlex.split(line)
+        args = []
+        try:
+            args = shlex.split(line)
+        except Exception:
+            print('*** Unknown syntax: {}'.format(line))
+            return
         class_name = args[0] if len(args) >= 1 else None
         if class_name is None:
             print("** class name missing **")
@@ -180,7 +190,12 @@ class HBNBCommand(cmd.Cmd):
         """Creates a new instance of a class.
         Usage: create <class name>
         """
-        args = shlex.split(line)
+        args = []
+        try:
+            args = shlex.split(line)
+        except Exception:
+            print('*** Unknown syntax: {}'.format(line))
+            return
         class_name = args[0] if len(args) >= 1 else None
         if class_name is None:
             print("** class name missing **")
@@ -196,7 +211,12 @@ class HBNBCommand(cmd.Cmd):
         """Removes an instance of a class with a given id.
         Usage: destroy <class name> <id>
         """
-        args = shlex.split(line)
+        args = []
+        try:
+            args = shlex.split(line)
+        except Exception:
+            print('*** Unknown syntax: {}'.format(line))
+            return
         class_name = args[0] if len(args) >= 1 else None
         obj_id = args[1] if len(args) >= 2 else None
         obj_store_id = None
@@ -230,7 +250,12 @@ class HBNBCommand(cmd.Cmd):
         """Prints an instance of a class with a given id.
         Usage: show <class name> <id>
         """
-        args = shlex.split(line)
+        args = []
+        try:
+            args = shlex.split(line)
+        except Exception:
+            print('*** Unknown syntax: {}'.format(line))
+            return
         class_name = args[0] if len(args) >= 1 else None
         obj_id = args[1] if len(args) >= 2 else None
         if class_name is None:
@@ -254,7 +279,12 @@ class HBNBCommand(cmd.Cmd):
         Usage: update <class name> <id> <attribute name> <attribute value>
                update <class name> <id> <dictionary representation>
         """
-        args = shlex.split(line)
+        args = []
+        try:
+            args = shlex.split(line)
+        except Exception:
+            print('*** Unknown syntax: {}'.format(line))
+            return
         ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
         class_name = args[0] if len(args) >= 1 else None
         obj_id = args[1] if len(args) >= 2 else None
