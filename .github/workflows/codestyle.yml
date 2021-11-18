@@ -1,7 +1,7 @@
 name: CodeStyle
 on: [push]
 jobs:
-  Python-Code-Styling:
+  Python:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -33,3 +33,23 @@ jobs:
             fi
           done
       - run: echo "This job's status is ${{ job.status }}."
+  HTML-CSS-SVG:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          main_dir="$PWD"
+          [ -d ~/tmp ] || mkdir ~/tmp
+          cd ~/tmp && git clone https://github.com/holbertonschool/W3C-Validator.git
+          [ -d ~/tmp/W3C-Validator ] && cd "$main_dir"
+      - name: Validate HTML, CSS and SVG files
+        run: |
+          Src_Files=()
+          readarray -t Src_Files < <(find . -type f | grep -oE '^.*\.(html|htm|css|svg)$')
+          for ((i = 0; i < "${#Src_Files[@]}"; i++)) do
+            file="${Src_Files[i]}"
+            echo -e "\n========== $file =========="
+            ~/tmp/W3C-Validator/w3c_validator.py "$file"
+          done
