@@ -17,6 +17,7 @@ jobs:
           Ignored_Files=()
           readarray -t Src_Files < <(find . -type f | grep -oE '^.*\.py$')
           readarray -t Ignored_Files < <([ -f '.gh_style_ignore' ] && cat '.gh_style_ignore')
+          chmod 777 ~/.local/lib/python3.8/site-packages/pep8.py
           for ((i = 0; i < "${#Src_Files[@]}"; i++)) do
             file="${Src_Files[i]}"
             skip="0"
@@ -29,7 +30,7 @@ jobs:
             if [[ "$skip" == "0" ]]; then
               echo -e "\n========== $file =========="
               pycodestyle $file
-              ~/.local/bin/pep8 $file
+              ~/.local/lib/python3.8/site-packages/pep8.py $file
             fi
           done
       - run: echo "This job's status is ${{ job.status }}."
