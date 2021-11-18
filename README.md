@@ -2,7 +2,7 @@
 
 ![Repo size](https://img.shields.io/github/repo-size/B3zaleel/AirBnB_clone)
 ![Code size](https://img.shields.io/github/languages/code-size/B3zaleel/AirBnB_clone.svg)
-![Pep8 style](https://img.shields.io/badge/PEP8-style%20guide-purple?style=round-square)
+[![CodeStyle](https://github.com/B3zaleel/AirBnB_clone/actions/workflows/codestyle.yml/badge.svg)](https://github.com/B3zaleel/AirBnB_clone/actions/workflows/codestyle.yml)
 ![Latest commit](https://img.shields.io/github/last-commit/B3zaleel/AirBnB_clone/main?style=round-square)
 
 ## Description
