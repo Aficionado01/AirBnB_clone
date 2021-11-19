@@ -89,7 +89,6 @@ class HBNBCommand(cmd.Cmd):
         parts = []
         n = len(txt)
         for i in range(n):
-
             if txt[i] == ',':
                 if (quote is None) and (brace is None):
                     if not pushed_a:
@@ -124,6 +123,8 @@ class HBNBCommand(cmd.Cmd):
                 if not pushed_a:
                     parts.append(txt[a: i if txt[i] == ',' else n])
                     pushed_a = True
+        if (quote is not None) or (brace is not None):
+            raise SyntaxError()
         parts = list(map(lambda x: x.strip(), parts))
         return parts
 
