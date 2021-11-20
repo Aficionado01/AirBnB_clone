@@ -3,6 +3,8 @@ header {
     height: 70px;
     background: #FFFFFF;
     border-bottom: 1px solid #CCCCCC;
+    grid-area: header;
+    align-self: flex-start;
 }
 
 header > a {
