@@ -1,7 +1,7 @@
 html {
     height: 100%;
-    --font-very-small: 0.8em;
-    --font-small: 0.9em;
+    --font-very-small: 0.9em;
+    --font-small: 1.0em;
     --font-medium: 1.1em;
     --font-large: 1.5em;
     --font-largest: 2.0em;
@@ -34,4 +34,15 @@ body {
     grid-area: container;
     align-self: stretch;
     justify-self: center;
+}
+
+@media (max-width: 480px) {
+    html {
+        height: 100%;
+        --font-very-small: 0.8em;
+        --font-small: 0.9em;
+        --font-medium: 1.1em;
+        --font-large: 1.5em;
+        --font-largest: 2.0em;
+    }
 }

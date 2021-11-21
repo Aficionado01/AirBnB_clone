@@ -136,7 +136,7 @@
     font-size: var(--font-very-small);
 }
 
-@media (max-widtH: 440px) {
+@media (max-width: 480px) {
     .places > article {
         display: grid;
         grid-auto-flow: row;
