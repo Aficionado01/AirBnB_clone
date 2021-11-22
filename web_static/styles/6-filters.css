@@ -3,7 +3,8 @@
     position: relative;
     background: #FFFFFF;
     height: 70px;
-    width: calc(100% - 2 * 1px);
+    width: calc(100% - 2 * 1px - 2 * 10px);
+    margin: 0 10px;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
     align-items: center;
@@ -35,9 +36,9 @@
     position: relative;
     width: 25%;
     height: 100%;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: calc(50% - 10px) calc(50% - 10px);
+    padding: 10px 5px 5px 30px;
     align-items: center;
-    padding-left: 30px;
 }
 
 .filters > .locations > h3,
@@ -58,13 +59,12 @@
     display: none;
     position: absolute;
     width: calc(100% - 60px - 2 * 1px);
-    top: 58px;
+    top: 62px;
     list-style-type: none;
     background: #FAFAFA;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
     padding: 30px;
-    box-shadow: 1px 1px 1px 1px #cac8c8e1;
     z-index: 5;
 }
 

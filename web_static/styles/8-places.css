@@ -18,7 +18,7 @@
     width: 390px;
     margin: 20px;
     padding: 20px;
-    flex-flow: row wrap;
+    flex-direction: column;
     border: 1px solid #FF5A5F;
     border-radius: 4px;
     align-self: stretch;

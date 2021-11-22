@@ -36,9 +36,9 @@
     position: relative;
     width: 25%;
     height: 100%;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: calc(50% - 10px) calc(50% - 10px);
+    padding: 10px 5px 5px 30px;
     align-items: center;
-    padding-left: 30px;
 }
 
 .filters > .locations > h3,
@@ -59,13 +59,12 @@
     display: none;
     position: absolute;
     width: calc(100% - 60px - 2 * 1px);
-    top: 58px;
+    top: 62px;
     list-style-type: none;
     background: #FAFAFA;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
     padding: 30px;
-    box-shadow: 1px 1px 1px 1px #cac8c8e1;
     z-index: 5;
 }
 
@@ -96,24 +95,27 @@
         align-items: center;
     }
 
-    .filters > .locations{
-        width: calc(100% - 15px - 2 * 1px);
-        height: 70px;
-        padding-left: 15px;
+    .filters > .locations {
+        width: calc(100% - 2 * 10px);
+        height: 40px;
+        grid-template-rows: 60% 40%;
+        padding: 5px 10px 15px 10px;
         border-right: none;
         border-bottom: 1px solid #DDDDDD;
     }
 
     .filters > .amenities {
-        width: calc(100% - 15px);
-        height: 70px;
-        padding-left: 15px;
+        width: calc(100% - 2 * 10px);
+        height: 40px;
+        grid-template-rows: 60% 40%;
+        padding: 5px 10px 15px 10px;
     }
 
     .filters > .locations > .popover,
     .filters > .amenities > .popover {
-        width: calc(100% - 30px - 2 * 1px);
-        padding: 15px;
+        top: 40px;
+        width: calc(100% - 2 * 10px - 2 * 1px);
+        padding: 10px;
     }
 
     .filters > button {
