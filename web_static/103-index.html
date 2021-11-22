@@ -16,14 +16,14 @@
 
 <body>
     <header>
-        <a href="./103-index.html" aria-label="HBnB homepage"></a>
+        <a href="./103-index.html" aria-label="HBnB homepage link"></a>
     </header>
     <main class="container">
-        <section class="filters" role="region" aria-label="Filters">
+        <section class="filters" aria-label="Filters">
             <div class="locations" aria-haspopup="menu" tabindex="0">
                 <h3>States</h3>
                 <h4>California, Lagos</h4>
-                <ul class="popover">
+                <ul class="popover" tabindex="0" role="menu">
                     <li>
                         <h2>Lagos</h2>
                         <ul>
@@ -46,7 +46,7 @@
             <div class="amenities" aria-haspopup="menu" tabindex="0">
                 <h3>Amenities</h3>
                 <h4>Kitchen, WiFi</h4>
-                <ul class="popover">
+                <ul class="popover" tabindex="0" role="menu">
                     <li>WiFi</li>
                     <li>TV</li>
                     <li>Swimming Pool</li>
@@ -54,9 +54,9 @@
             </div>
             <button>Search</button>
         </section>
-        <section class="places">
+        <section class="places" aria-label="Places available">
             <h1>Places</h1>
-            <article role="article">
+            <article>
                 <h2>Private room</h2>
                 <div class="price_by_night">$60</div>
                 <div class="information">
@@ -91,14 +91,14 @@
                 <div class="user">
                     <b>Owner:</b> Mei Lin
                 </div>
-                <div class="description" aria-label="Description of the place">
+                <p class="description">
                     Lovely garden setting in a serene and art-filled home.
                     Private bedroom, the rest of the house offers mini kitchen with small microwave and fridge on the same level.
                     Large equipped kitchen upstairs. There are 2 full Bathrooms (1 upstairs) shared between 4 guest rooms.
                     The price is well below market price for the location and ambience. Room is in the basement.
                     Best for someone comfortable with sharing bathrooms looking for a place near Whole Foods and downtown Palo Alto.
                     Check in between 3-9 pm
-                </div>
+                </p>
                 <div class="amenities">
                     <h2>Amenities</h2>
                     <ul aria-label="Amenities at the place">
@@ -164,7 +164,7 @@
                     </ul>
                 </div>
             </article>
-            <article role="article">
+            <article>
                 <h2>My home</h2>
                 <div class="price_by_night">$53</div>
                 <div class="information">
@@ -199,12 +199,12 @@
                 <div class="user">
                     <b>Owner:</b> Henry
                 </div>
-                <div class="description" aria-label="Description of the place">
+                <p class="description">
                     This sparkling clean luxury mansion is a masterpiece.
                     We take our cleaning seriously. With professional help day round, we keep your space fresh.
                     This room comes with a modern bathroom, with high water pressure system, Full bouquet Satellite TV, private sitting area, fridge, coffee station, fluffy bed and fibre pillows and so on.
                     Power is 24/7. Wifi is super fast and security is top notch. Need more? just ask!
-                </div>
+                </p>
                 <div class="amenities">
                     <h2>Amenities</h2>
                     <ul aria-label="Amenities at the place">
@@ -267,7 +267,7 @@
                     </ul>
                 </div>
             </article>
-            <article role="article">
+            <article>
                 <h2>Garden suite</h2>
                 <div class="price_by_night">$115</div>
                 <div class="information">
@@ -302,7 +302,7 @@
                 <div class="user">
                     <b>Owner:</b> Lasisi Elenu
                 </div>
-                <div class="description" aria-label="Description of the place">
+                <p class="description">
                     Secret Garden Getaway in the City. Great for social distancing!
                     <br/>
                     <br/>
@@ -313,10 +313,10 @@
                     <br/>
                     <br/>
                     Bright, airy and modern with touches of vintage and handmade art. Inside out living, with private patio and lots of light. All the creature comforts one needs to rest, work and play!
-                </div>
+                </p>
                 <div class="amenities">
                     <h2>Amenities</h2>
-                    <ul aria-label="Amenities at the place">
+                    <ul tabindex="0" aria-label="Amenities at the place">
                         <li>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <path d="M12,21L15.6,16.2C14.6,15.45 13.35,15 12,15C10.65,15 9.4,15.45 8.4,16.2L12,21M12,3C7.95,3 4.21,4.34 1.2,6.6L3,9C5.5,7.12 8.62,6 12,6C15.38,6 18.5,7.12 21,9L22.8,6.6C19.79,4.34 16.05,3 12,3M12,9C9.3,9 6.81,9.89 4.8,11.4L6.6,13.8C8.1,12.67 9.97,12 12,12C14.03,12 15.9,12.67 17.4,13.8L19.2,11.4C17.19,9.89 14.7,9 12,9Z" />
