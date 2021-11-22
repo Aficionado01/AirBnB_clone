@@ -75,8 +75,9 @@
     display: block;
 }
 
-.filters > .locations:focus > .popover,
-.filters > .amenities:focus > .popover {
+.filters > .locations:focus-within > .popover,
+.filters > .amenities:focus-within > .popover,
+.popover:focus {
     display: block;
 }
 
@@ -93,7 +94,7 @@
     padding-left: 20px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 530px) {
     .filters {
         flex-direction: column;
         height: fit-content;
