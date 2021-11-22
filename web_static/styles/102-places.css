@@ -1,5 +1,6 @@
 .places {
     display: flex;
+    width: calc(100% - 2 * 15px);
     padding: 20px 15px;
     align-items: center;
     justify-content: center;
@@ -153,9 +154,10 @@
 
     .places > article > .price_by_night {
         position: unset;
-        border-radius: 15px;
+        border-radius: 2.1em;
         margin-bottom: 0;
         width: fit-content;
+        height: fit-content;
         top: 0;
         right: 0;
     }

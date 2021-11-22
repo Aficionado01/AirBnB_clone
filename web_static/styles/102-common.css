@@ -10,6 +10,7 @@ html {
     /* --font-medium: 16px; */
     /* --font-large: 18px; */
     /* --font-largest: 30px; */
+    overflow: auto;
 }
 
 body {
@@ -25,6 +26,7 @@ body {
     color: #484848;
     font-family: Circular, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: var(--font-small);
+    overflow: auto;
 }
 
 .container {
