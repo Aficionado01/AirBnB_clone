@@ -2,7 +2,7 @@
 
 + [x] 0\. README, AUTHORS <br/>_**[README.md](README.md)**_ contains a description of the project and the command interpreter (including how to start it, use it and examples). <br/>_**[AUTHORS](AUTHORS)**_ contains a listing of individuals that have contributed content to the repository.
 + [x] 1\. Be PEP8 compliant! <br/>All the Python files should pass **PEP8** checks and the Bash scripts should pass the **Shellcheck** checks.
-+ [ ] 2\. Unittests <br/>_**[tests/](tests/)**_ contains unit tests for all the classes and methods which work in both the interactive and the non-interactive modes.
++ [x] 2\. Unittests <br/>_**[tests/](tests/)**_ contains unit tests for all the classes and methods which work in both the interactive and the non-interactive modes.
 + [x] 3\. BaseModel <br/>_**[models/base_model.py](models/base_model.py)**_ contains a class `BaseModel` that defines all common attributes/methods for other classes:
   + Public instance attribute `id` (str) that is assigned with an `uuid` when an instance is created.
   + Public instance attribute `created_at` (datetime) that is assigned with the current datetime when an instance is created.
@@ -87,4 +87,4 @@
 + [x] 14\. Destroy <br/>The command interpreter (_**[console.py](console.py)**_) should be able to destroy an instance based on its ID by using: `<class name>.destroy(<id>)`.
 + [x] 15\. Update <br/>The command interpreter (_**[console.py](console.py)**_) should be able to update an instance based on its ID by using: `<class name>.update(<id>, <attribute name>, <attribute value>)`.
 + [x] 16\. Update from dictionary <br/>The command interpreter (_**[console.py](console.py)**_) should be able to update an instance based on its ID with a dictionary by using: `<class name>.update(<id>, <dictionary representation>)`.
-+ [ ] 17\. Unittests for the Console! <br/>_**[tests/test_console.py](tests/test_console.py)**_ contains unittests for `console.py` and all its features.
++ [x] 17\. Unittests for the Console! <br/>_**[tests/test_console.py](tests/test_console.py)**_ contains unittests for `console.py` and all its features.
